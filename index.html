@@ -4,213 +4,138 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ADDMENT — 모듈형 영상 제작팀</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { overflow: hidden; height: 100vh; }
 
-    :root {
-      --black:   #000000;
-      --deep:    #000000;
-      --surface: #0f0f0f;
-      --surface2:#181818;
-      --border:  rgba(200,169,110,0.12);
-      --gold:    #c8a96e;
-      --gold-l:  #e0c88c;
-      --gold-d:  #6e5a34;
-      --white:   #eeeae2;
-      --muted:   #72726e;
-      --fh: 'Syne', sans-serif;
-      --fm: 'IBM Plex Mono', monospace;
-      --fb: 'Noto Sans KR', sans-serif;
+    /* ── FULL CANVAS HERO ── */
+    #hero-canvas {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
     }
 
-    html { scroll-behavior: smooth; }
-    body { background: var(--black); color: var(--white); font-family: var(--fb); overflow-x: hidden; cursor: none; }
+    /* ── DIGITAL CLOCK ── */
+    .clock-wrap {
+      position: fixed; bottom: 2.5rem; right: 4rem;
+      z-index: 10; text-align: right;
+      opacity: 0; animation: fadeIn 1s 1.8s forwards;
+    }
+    .clock-label {
+      font-family: var(--fm); font-size: .55rem;
+      letter-spacing: .25em; color: var(--gold-d);
+      text-transform: uppercase; margin-bottom: .3rem;
+      display: block;
+    }
+    .clock-time {
+      font-family: var(--fm); font-size: 1.1rem;
+      color: var(--gold); letter-spacing: .08em;
+      font-weight: 300;
+    }
+    .clock-ms {
+      font-size: .65rem; color: var(--gold-d);
+      margin-left: .2rem;
+    }
 
-    /* ── CURSOR ── */
-    .cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .25s, height .25s; mix-blend-mode: difference; }
-    .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1px solid rgba(200,169,110,.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); }
-    body:has(a:hover) .cursor, body:has(button:hover) .cursor { width: 20px; height: 20px; }
+    /* ── FLOATING KEYWORDS ── */
+    .keyword {
+      position: fixed;
+      font-family: var(--fm); font-size: .7rem;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: rgba(200,169,110,0.5);
+      pointer-events: none; z-index: 5;
+      white-space: nowrap;
+      transition: opacity 2s ease;
+    }
 
-    /* ── NAV ── */
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 4rem; border-bottom: 1px solid transparent; transition: all .4s; }
-    nav.scrolled { padding: 1rem 4rem; background: rgba(0,0,0,.96); backdrop-filter: blur(16px); border-bottom-color: var(--border); }
-    .nav-logo { display: flex; align-items: center; gap: .8rem; text-decoration: none; }
-    .nav-logo svg { flex-shrink: 0; }
-    .nav-tag { font-family: var(--fm); font-size: .58rem; color: var(--gold-d); letter-spacing: .1em; }
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-family: var(--fm); font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; transition: color .3s; }
-    .nav-links a:hover { color: var(--gold); }
-
-    /* ── HERO ── */
-    #hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
-    .hero-bg { position: absolute; inset: 0; background: linear-gradient(rgba(200,169,110,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,169,110,.03) 1px, transparent 1px); background-size: 60px 60px; }
-    .hero-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 70% at 60% 50%, rgba(200,169,110,.05) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 0% 100%, rgba(0,0,0,.9) 0%, transparent 80%); }
-    .hero-live { position: absolute; top: 7rem; right: 4rem; display: flex; align-items: center; gap: .6rem; font-family: var(--fm); font-size: .65rem; letter-spacing: .15em; color: var(--muted); opacity: 0; animation: fadeIn 1s 1.5s forwards; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #e05c5c; box-shadow: 0 0 0 3px rgba(224,92,92,.2); animation: livePulse 1.8s infinite; }
-    @keyframes livePulse { 0%,100% { box-shadow: 0 0 0 3px rgba(224,92,92,.2); } 50% { box-shadow: 0 0 0 8px rgba(224,92,92,0); } }
-    .hero-content { position: relative; z-index: 2; padding: 10rem 4rem 8rem; max-width: 920px; }
-    .hero-mono { font-family: var(--fm); font-size: .7rem; letter-spacing: .25em; color: var(--gold); margin-bottom: 2rem; opacity: 0; animation: fadeUp .8s .3s forwards; }
-    .hero-title { font-family: var(--fh); font-size: clamp(2.4rem,6vw,5rem); font-weight: 700; line-height: 1.1; letter-spacing: -.02em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp .9s .5s forwards; }
-    .hero-title .ko { font-family: var(--fb); font-weight: 700; display: block; }
-    .hero-title .brand { color: var(--gold); letter-spacing: .05em; }
-    .hero-sub { font-size: 1rem; line-height: 1.95; color: rgba(238,234,226,.6); max-width: 580px; margin-bottom: 3rem; opacity: 0; animation: fadeUp .9s .7s forwards; }
+    /* ── CENTER CONTENT ── */
+    .hero-center {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 10; text-align: center;
+      padding: 0 2rem;
+    }
+    .hero-eyebrow {
+      font-family: var(--fm); font-size: .65rem;
+      letter-spacing: .4em; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp .8s .4s forwards;
+    }
+    .hero-title {
+      font-family: var(--fh); font-weight: 800;
+      font-size: clamp(2.8rem,8vw,7rem);
+      line-height: .92; letter-spacing: -.03em;
+      margin-bottom: 1.8rem;
+      opacity: 0; animation: fadeUp .9s .6s forwards;
+    }
+    .hero-title .ko {
+      font-family: var(--fb); font-weight: 700;
+      font-size: clamp(1.6rem,4vw,3.5rem);
+      display: block; color: rgba(238,234,226,.7);
+      letter-spacing: -.01em; margin-bottom: .5rem;
+    }
+    .hero-title .brand { color: var(--gold); }
+    .hero-sub {
+      font-size: clamp(.85rem,1.5vw,1rem);
+      line-height: 1.9; color: rgba(238,234,226,.55);
+      max-width: 520px; margin-bottom: 3rem;
+      opacity: 0; animation: fadeUp .9s .8s forwards;
+    }
     .hero-sub strong { color: var(--white); font-weight: 500; }
-    .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; opacity: 0; animation: fadeUp .9s .9s forwards; }
-    .btn-primary { display: inline-flex; align-items: center; gap: .8rem; padding: .9rem 2rem; background: var(--gold); color: var(--black); font-family: var(--fm); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: background .3s; }
-    .btn-primary:hover { background: var(--gold-l); }
-    .btn-outline { display: inline-flex; align-items: center; gap: .8rem; padding: .9rem 2rem; border: 1px solid var(--gold-d); color: var(--gold); font-family: var(--fm); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; text-decoration: none; transition: border-color .3s, color .3s; }
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold-l); }
-    .hero-scroll { position: absolute; bottom: 2.5rem; left: 4rem; display: flex; align-items: center; gap: 1rem; opacity: 0; animation: fadeIn 1s 1.4s forwards; }
-    .hero-scroll span { font-family: var(--fm); font-size: .6rem; letter-spacing: .3em; color: var(--muted); text-transform: uppercase; }
-    .scroll-line { width: 40px; height: 1px; background: var(--gold-d); }
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0; animation: fadeUp .9s 1s forwards;
+    }
 
-    /* ── COMMON ── */
-    section { padding: 7rem 0; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 4rem; }
-    .sec-label { font-family: var(--fm); font-size: .63rem; letter-spacing: .4em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; display: block; }
-    .sec-title { font-family: var(--fh); font-size: clamp(2rem,4vw,3.2rem); font-weight: 700; line-height: 1.15; }
-    .sec-title .ko { font-family: var(--fb); font-weight: 700; }
-    .sec-title em { font-style: normal; color: var(--gold); }
+    /* ── SCROLL HINT ── */
+    .scroll-hint {
+      position: fixed; bottom: 2.5rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column;
+      align-items: center; gap: .6rem;
+      z-index: 10;
+      opacity: 0; animation: fadeIn 1s 1.5s forwards;
+    }
+    .scroll-hint span {
+      font-family: var(--fm); font-size: .58rem;
+      letter-spacing: .3em; color: var(--muted);
+      text-transform: uppercase;
+    }
+    .scroll-bar {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--gold-d), transparent);
+      animation: scrollPulse 2s infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity:.4; transform: scaleY(1); }
+      50%      { opacity:1;  transform: scaleY(1.1); }
+    }
 
-    /* ── REVEAL ANIMATION ── */
-    .reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s ease, transform .8s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    /* ── LIVE DOT ── */
+    .live-badge {
+      position: fixed; top: calc(var(--nav-h) + 1.5rem); right: 4rem;
+      display: flex; align-items: center; gap: .5rem;
+      font-family: var(--fm); font-size: .6rem;
+      letter-spacing: .15em; color: var(--muted);
+      z-index: 10;
+      opacity: 0; animation: fadeIn 1s 1.6s forwards;
+    }
+    .live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #e05c5c;
+      animation: livePulse 1.8s infinite;
+    }
+    @keyframes livePulse {
+      0%,100% { box-shadow: 0 0 0 2px rgba(224,92,92,.2); }
+      50%      { box-shadow: 0 0 0 6px rgba(224,92,92,0); }
+    }
 
-    /* ── ABOUT ── */
-    #about { background: var(--deep); }
-    .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 6rem; align-items: start; margin-top: 4rem; }
-    .about-body { font-size: 1rem; line-height: 1.95; color: rgba(238,234,226,.7); }
-    .about-body p { margin-bottom: 1.2rem; }
-    .about-body strong { color: var(--white); font-weight: 500; }
-    .value-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-    .value-card { background: var(--surface); border: 1px solid var(--border); padding: 2rem 1.8rem; transition: background .3s; }
-    .value-card:hover { background: var(--surface2); }
-    .value-icon { font-family: var(--fm); font-size: .6rem; letter-spacing: .12em; color: var(--gold); margin-bottom: .8rem; display: block; }
-    .value-title { font-family: var(--fh); font-weight: 700; font-size: .95rem; margin-bottom: .5rem; }
-    .value-desc { font-size: .8rem; line-height: 1.7; color: var(--muted); }
-
-    /* ── PHILOSOPHY ── */
-    #philosophy { background: var(--black); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .philo-inner { display: grid; grid-template-columns: 1fr 2fr; gap: 6rem; align-items: center; }
-    .philo-label-big { font-family: var(--fh); font-weight: 800; font-size: clamp(3rem,6vw,5rem); line-height: 1; color: rgba(200,169,110,.1); letter-spacing: -.02em; }
-    .philo-headline { font-family: var(--fh); font-weight: 700; font-size: clamp(1.4rem,3vw,2.2rem); line-height: 1.3; margin-bottom: 2rem; }
-    .philo-headline .ko { font-family: var(--fb); font-weight: 700; }
-    .philo-headline em { font-style: normal; color: var(--gold); }
-    .philo-text { font-size: .95rem; line-height: 2; color: rgba(238,234,226,.65); border-left: 2px solid var(--gold-d); padding-left: 1.5rem; }
-    .philo-text strong { color: var(--white); font-weight: 500; }
-
-    /* ── SERVICES ── */
-    #services { background: var(--deep); }
-    .services-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; }
-    .services-note { font-family: var(--fm); font-size: .7rem; color: var(--muted); letter-spacing: .05em; max-width: 280px; line-height: 1.7; text-align: right; }
-    .module-main { background: var(--surface); border: 1px solid rgba(200,169,110,.2); padding: 3.5rem 4rem; display: grid; grid-template-columns: 1fr auto; gap: 4rem; align-items: center; margin-bottom: 2px; position: relative; overflow: hidden; transition: background .3s; }
-    .module-main::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(to bottom, var(--gold), var(--gold-d)); }
-    .module-main:hover { background: var(--surface2); }
-    .mod-tag { font-family: var(--fm); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; border: 1px solid var(--gold-d); color: var(--gold-d); padding: .25rem .7rem; display: inline-block; margin-bottom: 1rem; }
-    .mod-tag.main { border-color: var(--gold); color: var(--gold); }
-    .mod-name { font-family: var(--fh); font-weight: 700; font-size: 1.9rem; margin-bottom: .5rem; }
-    .mod-ko { font-family: var(--fb); font-weight: 500; font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
-    .mod-desc { font-size: .88rem; line-height: 1.85; color: rgba(238,234,226,.6); max-width: 520px; }
-    .mod-badge { text-align: center; background: rgba(200,169,110,.06); border: 1px solid var(--border); padding: 2rem 2.5rem; min-width: 180px; }
-    .mod-badge-label { font-family: var(--fm); font-size: .58rem; letter-spacing: .2em; color: var(--muted); text-transform: uppercase; margin-bottom: .5rem; display: block; }
-    .mod-badge-val { font-family: var(--fh); font-weight: 800; font-size: 1.1rem; color: var(--gold); }
-    .mod-badge-sub { margin-top: .5rem; font-family: var(--fm); font-size: .58rem; color: var(--muted); letter-spacing: .1em; }
-    .modules-sub { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
-    .module-card { background: var(--surface); border: 1px solid var(--border); padding: 2.8rem; position: relative; overflow: hidden; transition: background .3s; }
-    .module-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--gold-d), transparent); transform: scaleX(0); transition: transform .5s; }
-    .module-card:hover { background: var(--surface2); }
-    .module-card:hover::after { transform: scaleX(1); }
-    .card-num { font-family: var(--fm); font-size: .62rem; color: var(--gold-d); letter-spacing: .1em; margin-bottom: 1.2rem; display: block; }
-    .card-name { font-family: var(--fh); font-weight: 700; font-size: 1.25rem; margin-bottom: .3rem; }
-    .card-ko { font-family: var(--fb); font-size: .78rem; color: var(--muted); margin-bottom: 1rem; }
-    .card-desc { font-size: .82rem; line-height: 1.85; color: rgba(238,234,226,.55); }
-    .specialty-note { font-family: var(--fm); font-size: .6rem; color: var(--gold-d); letter-spacing: .1em; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-
-    /* ── PRICING ── */
-    #pricing { background: var(--black); }
-    .pricing-common { display: flex; gap: 3rem; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); padding: 1.4rem 2rem; margin-bottom: 3rem; }
-    .pricing-common-item { display: flex; align-items: center; gap: .8rem; }
-    .pricing-common-label { font-family: var(--fm); font-size: .6rem; letter-spacing: .15em; color: var(--muted); text-transform: uppercase; }
-    .pricing-common-val { font-family: var(--fm); font-size: .72rem; color: var(--white); letter-spacing: .05em; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
-    @media (max-width: 1024px) { .pricing-grid { grid-template-columns: 1fr; } }
-    .price-card { background: var(--surface); border: 1px solid var(--border); padding: clamp(1.8rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2.5rem); position: relative; overflow: hidden; transition: background .3s; }
-    .price-card:hover { background: var(--surface2); }
-    .price-card.featured { border-color: rgba(200,169,110,.35); background: linear-gradient(160deg, var(--surface) 60%, rgba(200,169,110,.04) 100%); }
-    .price-card.featured::before { content: 'RECOMMENDED'; position: absolute; top: 1.2rem; right: 1.5rem; font-family: var(--fm); font-size: .55rem; letter-spacing: .2em; color: var(--gold); border: 1px solid var(--gold-d); padding: .2rem .6rem; }
-    .price-tier { font-family: var(--fm); font-size: .65rem; letter-spacing: .25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: block; }
-    .price-amount { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1; margin-bottom: .3rem; letter-spacing: .02em; }
-    .price-amount span { font-family: var(--fb); font-size: clamp(.75rem, 1.5vw, .95rem); font-weight: 400; color: var(--muted); margin-left: .3rem; vertical-align: middle; }
-    .price-desc { font-family: var(--fm); font-size: .65rem; color: var(--muted); letter-spacing: .1em; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
-    .price-features { list-style: none; display: flex; flex-direction: column; gap: .9rem; }
-    .price-features li { display: flex; align-items: flex-start; gap: .8rem; font-size: .83rem; line-height: 1.5; color: rgba(238,234,226,.7); }
-    .price-features li::before { content: '—'; color: var(--gold-d); font-family: var(--fm); flex-shrink: 0; margin-top: .05rem; }
-    .price-features li strong { color: var(--white); font-weight: 500; }
-    .price-cta { display: block; margin-top: 2.5rem; padding: .85rem 1.5rem; text-align: center; border: 1px solid var(--gold-d); color: var(--gold); font-family: var(--fm); font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; text-decoration: none; transition: all .3s; position: relative; overflow: hidden; z-index: 0; }
-    .price-cta::before { content: ''; position: absolute; inset: 0; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; z-index: -1; }
-    .price-cta:hover { color: var(--black); border-color: var(--gold); }
-    .price-cta:hover::before { transform: scaleX(1); }
-
-    /* ── MEDIA ── */
-    #media { background: var(--deep); }
-    .media-top { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; margin-top: 4rem; }
-    .media-body { font-size: .95rem; line-height: 2; color: rgba(238,234,226,.6); }
-    .media-body p { margin-bottom: 1rem; }
-    .media-note { font-family: var(--fm); font-size: .7rem; letter-spacing: .1em; color: var(--gold-d); margin-top: 1.5rem; }
-    .media-canvas-wrap { aspect-ratio: 16/9; border: 1px solid var(--border); position: relative; overflow: hidden; background: var(--surface); }
-    #mediaCanvas { width: 100%; height: 100%; display: block; }
-    .canvas-label { position: absolute; bottom: .8rem; right: 1rem; font-family: var(--fm); font-size: .58rem; letter-spacing: .2em; color: rgba(200,169,110,.4); }
-    .media-reel { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 2px; }
-    .reel-item { aspect-ratio: 16/9; background: var(--surface); border: 1px solid var(--border); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; }
-    .reel-overlay { position: absolute; inset: 0; background: rgba(200,169,110,.06); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .3s; }
-    .reel-item:hover .reel-overlay { opacity: 1; }
-    .reel-play-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: .9rem; }
-    .reel-info { position: absolute; bottom: .8rem; left: 1rem; font-family: var(--fm); font-size: .6rem; letter-spacing: .1em; color: var(--muted); }
-
-    /* ── CONTACT ── */
-    #contact { background: var(--black); }
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: start; margin-top: 4rem; }
-    .contact-notice { background: rgba(200,169,110,.05); border: 1px solid var(--border); border-left: 3px solid var(--gold-d); padding: 1.5rem 1.8rem; margin-bottom: 2.5rem; }
-    .contact-notice-label { font-family: var(--fm); font-size: .6rem; letter-spacing: .2em; color: var(--gold); margin-bottom: .6rem; display: block; }
-    .contact-notice p { font-size: .85rem; line-height: 1.75; color: rgba(238,234,226,.65); }
-    .contact-notice strong { color: var(--white); font-weight: 500; }
-    .contact-email-label { font-family: var(--fm); font-size: .6rem; letter-spacing: .2em; color: var(--muted); margin-bottom: .5rem; display: block; }
-    .contact-email { font-family: var(--fh); font-weight: 600; font-size: 1.1rem; color: var(--gold); text-decoration: none; letter-spacing: .02em; border-bottom: 1px solid var(--gold-d); padding-bottom: .2rem; display: inline-block; margin-bottom: 2rem; transition: color .3s, border-color .3s; }
-    .contact-email:hover { color: var(--gold-l); border-color: var(--gold-l); }
-    .contact-meta { font-family: var(--fm); font-size: .68rem; letter-spacing: .1em; color: var(--muted); line-height: 2.2; }
-    .contact-steps { list-style: none; }
-    .contact-step { display: flex; gap: 1.2rem; align-items: flex-start; padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
-    .step-num { font-family: var(--fm); font-size: .62rem; color: var(--gold-d); min-width: 1.5rem; padding-top: .1rem; }
-    .step-title { font-family: var(--fh); font-weight: 700; font-size: .9rem; margin-bottom: .3rem; }
-    .step-desc { font-size: .8rem; line-height: 1.7; color: var(--muted); }
-
-    /* ── FOOTER ── */
-    footer { background: var(--deep); border-top: 1px solid var(--border); padding: 2.5rem 4rem; display: flex; align-items: center; justify-content: space-between; }
-    .footer-copy { font-family: var(--fm); font-size: .62rem; letter-spacing: .08em; color: var(--muted); }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* ── MOBILE ── */
     @media (max-width: 768px) {
-      nav { padding: 1.2rem 1.5rem; }
-      .nav-links { display: none; }
-      .container { padding: 0 1.5rem; }
-      section { padding: 4.5rem 0; }
-      .hero-content { padding: 8rem 1.5rem 5rem; }
-      .hero-live { right: 1.5rem; }
-      .about-grid, .philo-inner, .media-top, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .module-main { grid-template-columns: 1fr; }
-      .mod-badge { display: none; }
-      .modules-sub, .media-reel, .pricing-grid { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: .8rem; }
-      .services-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-      .services-note { text-align: left; }
-      .pricing-common { gap: 1.2rem; }
+      .clock-wrap { right: 1.5rem; bottom: 5rem; }
+      .live-badge { right: 1.5rem; }
+      .scroll-hint { display: none; }
     }
   </style>
 </head>
@@ -219,319 +144,79 @@
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
-<!-- ━━ NAV ━━ -->
+<!-- CANVAS -->
+<canvas id="hero-canvas"></canvas>
+
+<!-- NAV -->
 <nav id="nav">
-  <a href="#hero" class="nav-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 38" height="32" width="auto">
-      <text x="0" y="30" font-family="Syne, sans-serif" font-weight="800" font-size="30" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
+  <a href="index.html" class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="30" width="auto">
+      <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
     </svg>
     <span class="nav-tag">// Module Team</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#philosophy">Philosophy</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="live.html">Live</a></li>
+    <li><a href="youtube.html">YouTube</a></li>
+    <li><a href="wedding.html">Wedding</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
+  <div class="nav-hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
 </nav>
 
-<!-- ━━ HERO ━━ -->
-<section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-live"><div class="live-dot"></div>ON-DEMAND PRODUCTION</div>
-  <div class="hero-content">
-    <p class="hero-mono">// ADDMENT · Modular Video Team</p>
-    <h1 class="hero-title">
-      <span class="ko">귀사의 기획에<br/>기술적인 움직임을</span>
-      더합니다. <span class="brand">ADDMENT</span>
-    </h1>
-    <p class="hero-sub">
-      <strong>비싼 기획비와 고정비 대신,</strong> 필요할 때만 가동되는 '모듈형 영상팀'을 고용하세요.<br/>
-      출장 라이브부터 AI 영상까지 — 우리는 <strong>실행에만 집중합니다.</strong>
-    </p>
-    <div class="hero-actions">
-      <a href="#pricing" class="btn-primary">
-        가격 확인하기
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      </a>
-      <a href="#contact" class="btn-outline">문의하기</a>
-    </div>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" class="active">Home</a>
+  <a href="live.html">Live</a>
+  <a href="youtube.html">YouTube</a>
+  <a href="wedding.html">Wedding</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- LIVE BADGE -->
+<div class="live-badge"><div class="live-dot"></div>ON-DEMAND PRODUCTION</div>
+
+<!-- FLOATING KEYWORDS (JS로 생성) -->
+
+<!-- CENTER CONTENT -->
+<div class="hero-center">
+  <p class="hero-eyebrow">// ADDMENT · Modular Video Team</p>
+  <h1 class="hero-title">
+    <span class="ko">귀사의 기획에 기술적인 움직임을</span>
+    더합니다. <span class="brand">ADDMENT</span>
+  </h1>
+  <p class="hero-sub">
+    <strong>비싼 기획비와 고정비 대신,</strong> 필요할 때만 가동되는 '모듈형 영상팀'을 고용하세요.<br/>
+    출장 라이브부터 AI 영상까지 — 우리는 <strong>실행에만 집중합니다.</strong>
+  </p>
+  <div class="hero-actions">
+    <a href="live.html" class="btn-primary">
+      서비스 보기
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </a>
+    <a href="contact.html" class="btn-outline">문의하기</a>
   </div>
-  <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
-</section>
+</div>
 
-<!-- ━━ ABOUT ━━ -->
-<section id="about">
-  <div class="container">
-    <span class="sec-label reveal">// About ADDMENT</span>
-    <h2 class="sec-title reveal"><span class="ko">실무 중심의</span> <em>모듈형 영상팀</em></h2>
-    <div class="about-grid">
-      <div class="about-body reveal">
-        <p>ADDMENT는 <strong>B2B 영상 실행 전문팀</strong>입니다. 사내 영상팀을 꾸리기엔 부담스럽고, 대형 프로덕션을 쓰기엔 과도한 — 그 사이의 공백을 채웁니다.</p>
-        <p>기획은 귀사가, <strong>실행은 ADDMENT가.</strong> 우리는 불필요한 기획 비용을 걷어낸 실무 중심의 모듈형 영상팀입니다.</p>
-        <p>출장 라이브 스트리밍을 핵심으로, 유튜브 콘텐츠 · 웨딩 필름 · AI 영상 제작까지 — 필요한 모듈만 선택해 효율적으로 운영하세요.</p>
-      </div>
-      <div class="value-grid reveal">
-        <div class="value-card">
-          <span class="value-icon">COST_EFFICIENT</span>
-          <div class="value-title">70% 비용 절감</div>
-          <div class="value-desc">사내 영상팀 운영 대비 평균 70% 비용을 절감합니다.</div>
-        </div>
-        <div class="value-card">
-          <span class="value-icon">TECH_DRIVEN</span>
-          <div class="value-title">최신 기술 도입</div>
-          <div class="value-desc">최신 라이브 송출 시스템 및 AI 편집 워크플로우를 운영합니다.</div>
-        </div>
-        <div class="value-card">
-          <span class="value-icon">ON_DEMAND</span>
-          <div class="value-title">모듈형 조직</div>
-          <div class="value-desc">필요한 순간에만 활성화되는 유연한 모듈 구조로 운영됩니다.</div>
-        </div>
-        <div class="value-card">
-          <span class="value-icon">RELIABLE</span>
-          <div class="value-title">전국 출장 보장</div>
-          <div class="value-desc">전국 어디든 출장 가능, 안정적인 실시간 스트리밍을 보장합니다.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- CLOCK -->
+<div class="clock-wrap">
+  <span class="clock-label">// Live Sync</span>
+  <div class="clock-time" id="clockTime">00:00:00<span class="clock-ms" id="clockMs">.000</span></div>
+</div>
 
-<!-- ━━ PHILOSOPHY ━━ -->
-<section id="philosophy">
-  <div class="container">
-    <div class="philo-inner">
-      <div class="reveal">
-        <div class="philo-label-big">OUR<br/>WAY</div>
-      </div>
-      <div>
-        <span class="sec-label reveal">// The Philosophy</span>
-        <h2 class="philo-headline reveal">
-          <span class="ko">기획은 클라이언트가,</span><br/>실행은 <em>ADDMENT</em>가
-        </h2>
-        <p class="philo-text reveal">
-          우리는 <strong>화려한 기획서로 비용을 높이지 않습니다.</strong><br/>
-          서비스와 상품을 가장 잘 아는 귀사의 기획안을, 기술적으로 가장 완벽하게 구현하는 것에만 집중합니다.<br/><br/>
-          ADDMENT는 크리에이티브 에이전시가 아닙니다. 우리는 <strong>'실행 전문 모듈팀'</strong>입니다. 귀사의 전략 위에 우리의 기술을 얹습니다.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- SCROLL HINT -->
+<div class="scroll-hint">
+  <div class="scroll-bar"></div>
+  <span>Explore</span>
+</div>
 
-<!-- ━━ SERVICES ━━ -->
-<section id="services">
-  <div class="container">
-    <div class="services-header">
-      <div>
-        <span class="sec-label reveal">// Service Modules</span>
-        <h2 class="sec-title reveal">모듈 선택형 <em>서비스</em></h2>
-      </div>
-      <p class="services-note reveal">필요한 모듈만 선택해 계약하세요.<br/>고정 비용 없이 프로젝트 단위로 운영됩니다.</p>
-    </div>
-
-    <div class="module-main reveal">
-      <div>
-        <span class="mod-tag main">MAIN MODULE</span>
-        <div class="mod-name">Live Streaming</div>
-        <div class="mod-ko">출장 라이브 스트리밍</div>
-        <div class="mod-desc">기업 행사, 세미나, 컨퍼런스, 라이브 커머스 전담 송출. YouTube · Instagram · Twitch 등 멀티 플랫폼 동시 송출 지원. 구독형 모델로 정기 행사 할인 제공.</div>
-      </div>
-      <div class="mod-badge">
-        <span class="mod-badge-label">Category</span>
-        <div class="mod-badge-val">B2B LIVE</div>
-        <div class="mod-badge-sub">SUBSCRIPTION AVAIL.</div>
-      </div>
-    </div>
-
-    <div class="modules-sub">
-      <div class="module-card reveal">
-        <span class="card-num">02 · MODULE</span>
-        <div class="mod-tag">MODULE</div>
-        <div class="card-name">YouTube Content</div>
-        <div class="card-ko">유튜브 콘텐츠 제작</div>
-        <div class="card-desc">채널 운영을 위한 정기 촬영 및 편집 지원. 기획은 귀사가, 촬영·편집은 ADDMENT가 담당합니다.</div>
-      </div>
-      <div class="module-card reveal">
-        <span class="card-num">03 · MODULE · AI</span>
-        <div class="mod-tag">MODULE · AI</div>
-        <div class="card-name">AI Production</div>
-        <div class="card-ko">AI 영상 제작</div>
-        <div class="card-desc">효율성을 극대화한 스마트 영상 가공. 브랜드 영상, 광고 소재, 숏폼 콘텐츠를 AI 워크플로우로 제작합니다.</div>
-      </div>
-      <div class="module-card reveal">
-        <span class="card-num">04 · SPECIALTY</span>
-        <div class="mod-tag">SPECIALTY</div>
-        <div class="card-name">Wedding Archive</div>
-        <div class="card-ko">웨딩 영상 제작</div>
-        <div class="card-desc">기록의 가치를 더하는 고감도 웨딩 영상. 시네마틱 연출로 소중한 순간을 아카이브합니다.</div>
-        <div class="specialty-note">// B2B 외 개인 서비스 전용 모듈</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ━━ PRICING ━━ -->
-<section id="pricing">
-  <div class="container">
-    <span class="sec-label reveal">// Live Streaming · Pricing</span>
-    <h2 class="sec-title reveal">출장 라이브 스트리밍 <em>가격표</em></h2>
-
-    <div class="pricing-common reveal">
-      <div class="pricing-common-item">
-        <span class="pricing-common-label">촬영 시간</span>
-        <span class="pricing-common-val">60분</span>
-      </div>
-      <div class="pricing-common-item">
-        <span class="pricing-common-label">작업일</span>
-        <span class="pricing-common-val">1일</span>
-      </div>
-      <div class="pricing-common-item">
-        <span class="pricing-common-label">수정 횟수</span>
-        <span class="pricing-common-val">0회</span>
-      </div>
-      <div class="pricing-common-item">
-        <span class="pricing-common-label">인도 방식</span>
-        <span class="pricing-common-val">현장 송출 완료 후 즉시 인도</span>
-      </div>
-    </div>
-
-    <div class="pricing-grid">
-      <div class="price-card reveal">
-        <span class="price-tier">Standard</span>
-        <div class="price-amount">220,000<span>원</span></div>
-        <div class="price-desc">단일 카메라 · 기본 송출</div>
-        <ul class="price-features">
-          <li><strong>카메라 1대</strong></li>
-          <li>마이크 2대</li>
-          <li>송출 장비 일체</li>
-          <li>조명</li>
-          <li>송출 감독 1명</li>
-          <li>전체화면 샷 지원</li>
-        </ul>
-        <a href="#contact" class="price-cta">문의하기</a>
-      </div>
-
-      <div class="price-card featured reveal">
-        <span class="price-tier">Deluxe</span>
-        <div class="price-amount">275,000<span>원</span></div>
-        <div class="price-desc">듀얼 카메라 · 지정 샷 추가</div>
-        <ul class="price-features">
-          <li><strong>카메라 2대</strong></li>
-          <li>마이크 2대</li>
-          <li>송출 장비 일체</li>
-          <li>조명</li>
-          <li>송출 감독 1명</li>
-          <li>전체화면 샷 지원</li>
-          <li><strong>지정 샷 1개 추가</strong></li>
-        </ul>
-        <a href="#contact" class="price-cta">문의하기</a>
-      </div>
-
-      <div class="price-card reveal">
-        <span class="price-tier">Premium</span>
-        <div class="price-amount">330,000<span>원</span></div>
-        <div class="price-desc">트리플 카메라 · 멀티 샷 구성</div>
-        <ul class="price-features">
-          <li><strong>카메라 3대</strong></li>
-          <li>마이크 2대</li>
-          <li>송출 장비 일체</li>
-          <li>조명</li>
-          <li>송출 감독 1명</li>
-          <li>전체화면 샷 지원</li>
-          <li><strong>지정 샷 2개 추가</strong></li>
-        </ul>
-        <a href="#contact" class="price-cta">문의하기</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ━━ MEDIA ━━ -->
-<section id="media">
-  <div class="container">
-    <span class="sec-label reveal">// Media · Works</span>
-    <h2 class="sec-title reveal">실행의 <em>결과물</em></h2>
-    <div class="media-top">
-      <div class="media-body reveal">
-        <p>ADDMENT의 모든 결과물은 클라이언트의 기획 위에 만들어집니다.</p>
-        <p>현장의 긴박함 속에서도 흔들리지 않는 기술력, 그것이 우리가 수백 번의 라이브에서 쌓아온 경쟁력입니다.</p>
-        <p class="media-note">// 포트폴리오 영상은 문의 후 제공됩니다</p>
-      </div>
-      <div class="media-canvas-wrap reveal">
-        <canvas id="mediaCanvas"></canvas>
-        <span class="canvas-label">// LIVE SIGNAL SIMULATION</span>
-      </div>
-    </div>
-    <div class="media-reel">
-      <div class="reel-item reveal">
-        <div class="reel-overlay"><div class="reel-play-btn">▶</div></div>
-        <div class="reel-info">MODULE_01 · Live</div>
-      </div>
-      <div class="reel-item reveal">
-        <div class="reel-overlay"><div class="reel-play-btn">▶</div></div>
-        <div class="reel-info">MODULE_02 · YouTube</div>
-      </div>
-      <div class="reel-item reveal">
-        <div class="reel-overlay"><div class="reel-play-btn">▶</div></div>
-        <div class="reel-info">MODULE_03 · AI</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ━━ CONTACT ━━ -->
-<section id="contact">
-  <div class="container">
-    <span class="sec-label reveal">// Get In Touch</span>
-    <h2 class="sec-title reveal">프로젝트를 <em>시작하세요</em></h2>
-    <div class="contact-grid">
-      <div>
-        <div class="contact-notice reveal">
-          <span class="contact-notice-label">TIP · 더 빠른 상담을 원하신다면</span>
-          <p><strong>기획안(초안)이 준비되어 있다면 더욱 빠른 상담이 가능합니다.</strong> ADDMENT는 실행 전문팀으로, 귀사의 기획을 기반으로 최적의 모듈을 제안드립니다.</p>
-        </div>
-        <div class="reveal">
-          <span class="contact-email-label">// E-MAIL</span>
-          <a href="mailto:info.addment@gmail.com" class="contact-email">info.addment@gmail.com</a>
-        </div>
-        <div class="contact-meta reveal">
-          LOCATION · 서울 · 전국 출장 가능<br/>
-          OVERSEAS · 해외 프로젝트 협의 가능<br/>
-          RESPONSE · 영업일 기준 24시간 이내
-        </div>
-      </div>
-      <div class="reveal">
-        <ul class="contact-steps">
-          <li class="contact-step">
-            <span class="step-num">01</span>
-            <div><div class="step-title">기획안 준비</div><div class="step-desc">행사 개요, 목적, 플랫폼, 예상 일정 등 초안을 준비해 주세요.</div></div>
-          </li>
-          <li class="contact-step">
-            <span class="step-num">02</span>
-            <div><div class="step-title">모듈 상담</div><div class="step-desc">필요한 서비스 모듈을 선택하고, 규모에 맞는 견적을 협의합니다.</div></div>
-          </li>
-          <li class="contact-step">
-            <span class="step-num">03</span>
-            <div><div class="step-title">실행 계약</div><div class="step-desc">계약 후 ADDMENT가 현장 준비부터 마무리까지 전담합니다.</div></div>
-          </li>
-          <li class="contact-step">
-            <span class="step-num">04</span>
-            <div><div class="step-title">결과물 납품</div><div class="step-desc">라이브 종료 또는 영상 편집 완료 후 즉시 납품합니다.</div></div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ━━ FOOTER ━━ -->
-<footer>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 38" height="24" width="auto">
-    <text x="0" y="30" font-family="Syne, sans-serif" font-weight="800" font-size="30" letter-spacing="4" fill="rgba(255,255,255,0.6)">ADDMENT</text>
-  </svg>
-  <div class="footer-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
+<!-- FOOTER -->
+<footer style="position:fixed;bottom:0;left:0;right:0;z-index:1;background:transparent;border:none;padding:0;">
 </footer>
 
 <script>
@@ -539,98 +224,174 @@
   // ── Cursor ──
   var cursor = document.getElementById('cursor');
   var ring   = document.getElementById('cursorRing');
-  var mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
-  function tickCursor() {
-    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-    rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(tickCursor);
-  }
-  tickCursor();
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', function(e){mx=e.clientX;my=e.clientY;});
+  (function tick(){
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+    rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(tick);
+  })();
 
-  // ── Nav scroll ──
+  // ── Nav ──
   var nav = document.getElementById('nav');
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 60) nav.classList.add('scrolled');
-    else nav.classList.remove('scrolled');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+  document.getElementById('hamburger').addEventListener('click', function(){
+    document.getElementById('mobileMenu').classList.toggle('open');
   });
 
-  // ── Scroll Reveal ──
-  var revealEls = document.querySelectorAll('.reveal');
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry, i) {
-      if (entry.isIntersecting) {
-        setTimeout(function() {
-          entry.target.classList.add('visible');
-        }, i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.08 });
-  revealEls.forEach(function(el) { observer.observe(el); });
+  // ── Digital Clock ──
+  function updateClock() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2,'0');
+    var m = String(now.getMinutes()).padStart(2,'0');
+    var s = String(now.getSeconds()).padStart(2,'0');
+    var ms = String(now.getMilliseconds()).padStart(3,'0');
+    document.getElementById('clockTime').childNodes[0].textContent = h+':'+m+':'+s;
+    document.getElementById('clockMs').textContent = '.'+ms;
+  }
+  setInterval(updateClock, 1);
+  updateClock();
 
-  // ── Canvas: Live Signal ──
-  var canvas = document.getElementById('mediaCanvas');
+  // ── Generative Art Canvas ──
+  var canvas = document.getElementById('hero-canvas');
   var ctx = canvas.getContext('2d');
-  function resizeCanvas() {
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  resize();
+  window.addEventListener('resize', resize);
 
-  var LINES = 6;
-  var signals = [];
-  for (var i = 0; i < LINES; i++) {
-    signals.push({
-      y:     (i + 1) / (LINES + 1),
+  // Particle system
+  var PARTICLE_COUNT = 120;
+  var particles = [];
+  for (var i=0; i<PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random()-.5) * .4,
+      vy: (Math.random()-.5) * .4,
+      r: .5 + Math.random() * 2.5,
+      alpha: .1 + Math.random() * .5,
       phase: Math.random() * Math.PI * 2,
-      freq:  0.6 + Math.random() * 0.8,
-      amp:   0.04 + Math.random() * 0.06,
-      alpha: 0.15 + Math.random() * 0.35
+      freq: .003 + Math.random() * .008,
     });
   }
+
+  // Mouse interaction
+  var mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+  document.addEventListener('mousemove', function(e){
+    mouse.x = e.clientX; mouse.y = e.clientY;
+  });
 
   var t = 0;
   function drawCanvas() {
     var W = canvas.width, H = canvas.height;
-    ctx.fillStyle = '#0f0f0f';
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(0,0,0,0.18)';
+    ctx.fillRect(0,0,W,H);
 
-    // grid
-    ctx.strokeStyle = 'rgba(200,169,110,0.04)';
-    ctx.lineWidth = 1;
-    for (var x = 0; x < W; x += W / 12) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-    for (var y = 0; y < H; y += H / 6)  { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-
-    // signal waves
-    signals.forEach(function(s) {
-      ctx.beginPath();
-      for (var x = 0; x <= W; x += 2) {
-        var nx   = x / W;
-        var wave = Math.sin(nx * Math.PI * 8 * s.freq + t * s.freq + s.phase) * s.amp * H
-                 + Math.sin(nx * Math.PI * 3 + t * 0.4 + s.phase) * s.amp * 0.5 * H;
-        if (x === 0) ctx.moveTo(x, s.y * H + wave);
-        else         ctx.lineTo(x, s.y * H + wave);
+    // Connection lines between nearby particles
+    for (var i=0; i<particles.length; i++) {
+      for (var j=i+1; j<particles.length; j++) {
+        var dx = particles[i].x - particles[j].x;
+        var dy = particles[i].y - particles[j].y;
+        var dist = Math.sqrt(dx*dx+dy*dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = 'rgba(200,169,110,'+(0.06*(1-dist/120))+')';
+          ctx.lineWidth = .5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
       }
-      ctx.strokeStyle = 'rgba(200,169,110,' + s.alpha + ')';
-      ctx.lineWidth = 0.8;
-      ctx.stroke();
+    }
+
+    // Draw & update particles
+    particles.forEach(function(p) {
+      // Wave motion
+      var wave = Math.sin(t * p.freq * 100 + p.phase) * 1.2;
+      p.x += p.vx + wave * .1;
+      p.y += p.vy + Math.cos(t * p.freq * 100 + p.phase) * .1;
+
+      // Mouse repulsion
+      var mdx = p.x - mouse.x;
+      var mdy = p.y - mouse.y;
+      var md = Math.sqrt(mdx*mdx + mdy*mdy);
+      if (md < 100) {
+        p.x += mdx/md * 1.5;
+        p.y += mdy/md * 1.5;
+      }
+
+      // Wrap edges
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+
+      // Pulsing alpha
+      var a = p.alpha * (.7 + .3 * Math.sin(t * .02 + p.phase));
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(200,169,110,'+a+')';
+      ctx.fill();
     });
 
-    // scan line
-    var scanX = (t * 60) % W;
-    var grad  = ctx.createLinearGradient(scanX - 60, 0, scanX, 0);
-    grad.addColorStop(0, 'transparent');
-    grad.addColorStop(1, 'rgba(200,169,110,0.12)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(scanX - 60, 0, 60, H);
+    // Central radial glow
+    var grd = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.4);
+    grd.addColorStop(0,'rgba(200,169,110,0.03)');
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
 
-    t += 0.022;
+    t++;
     requestAnimationFrame(drawCanvas);
   }
   drawCanvas();
+
+  // ── Floating Keywords ──
+  var keywords = [
+    '실행 전문', '모듈형 팀', '70% 비용 절감', '전국 출장',
+    'AI 워크플로우', '압도적 효율', 'B2B 전문',
+    'On-Demand', 'Live Streaming'
+  ];
+  var keywordEls = [];
+
+  function createKeyword(word) {
+    var el = document.createElement('div');
+    el.className = 'keyword';
+    el.textContent = word;
+    el.style.left = (10 + Math.random() * 80) + 'vw';
+    el.style.top  = (10 + Math.random() * 80) + 'vh';
+    el.style.opacity = '0';
+    document.body.appendChild(el);
+
+    var delay = Math.random() * 3000;
+    setTimeout(function(){
+      el.style.opacity = (0.2 + Math.random() * 0.4).toString();
+      setTimeout(function(){
+        el.style.opacity = '0';
+        setTimeout(function(){
+          if (el.parentNode) el.parentNode.removeChild(el);
+          createKeyword(keywords[Math.floor(Math.random()*keywords.length)]);
+        }, 2000);
+      }, 3000 + Math.random() * 4000);
+    }, delay);
+  }
+
+  // Spawn initial keywords with stagger
+  keywords.forEach(function(word, i) {
+    setTimeout(function(){ createKeyword(word); }, i * 400 + 2000);
+  });
+  // Keep spawning
+  setInterval(function(){
+    createKeyword(keywords[Math.floor(Math.random()*keywords.length)]);
+  }, 2500);
+
 })();
 </script>
 </body>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADDMENT — About</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .hero-bg-grid {
+      position:absolute; inset:0;
+      background:
+        linear-gradient(rgba(200,169,110,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(200,169,110,.025) 1px,transparent 1px);
+      background-size:60px 60px;
+    }
+    #page-hero { min-height:55vh; display:flex; align-items:flex-end; padding-top:var(--nav-h); position:relative; overflow:hidden; }
+
+    /* MANIFESTO */
+    #manifesto { background:var(--deep); padding:8rem 0; }
+    .manifesto-inner {
+      display:grid; grid-template-columns:1fr 2fr; gap:6rem; align-items:start;
+    }
+    .manifesto-label-big {
+      font-family:var(--fh); font-weight:800;
+      font-size:clamp(4rem,8vw,7rem); line-height:.9;
+      color:rgba(200,169,110,.08); letter-spacing:-.03em;
+    }
+    .manifesto-headline {
+      font-family:var(--fh); font-weight:700;
+      font-size:clamp(1.8rem,4vw,3rem); line-height:1.15;
+      margin-bottom:2.5rem;
+    }
+    .manifesto-headline .ko { font-family:var(--fb); font-weight:700; }
+    .manifesto-headline em { font-style:normal; color:var(--gold); }
+    .manifesto-body { font-size:.95rem; line-height:2.1; color:rgba(238,234,226,.65); }
+    .manifesto-body p { margin-bottom:1.4rem; }
+    .manifesto-body strong { color:var(--white); font-weight:500; }
+
+    /* BIG QUOTE */
+    #big-quote {
+      background:var(--black);
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+      padding:7rem 0;
+    }
+    .big-quote-text {
+      font-family:var(--fc); font-weight:300;
+      font-size:clamp(1.6rem,4vw,3rem);
+      line-height:1.3; letter-spacing:-.01em;
+      color:var(--white); max-width:900px;
+    }
+    .big-quote-text em {
+      font-style:normal; color:var(--gold);
+    }
+    .big-quote-attr {
+      font-family:var(--fm); font-size:.65rem;
+      letter-spacing:.25em; color:var(--gold-d);
+      text-transform:uppercase; margin-top:2rem; display:block;
+    }
+
+    /* VALUES */
+    #values { background:var(--deep); }
+    .value-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-top:4rem; }
+    .value-card {
+      background:var(--surface); border:1px solid var(--border);
+      padding:2.5rem 2rem; transition:background .3s; position:relative; overflow:hidden;
+    }
+    .value-card::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+      background:linear-gradient(to right,transparent,var(--gold-d),transparent);
+      transform:scaleX(0); transition:transform .5s;
+    }
+    .value-card:hover { background:var(--surface2); }
+    .value-card:hover::after { transform:scaleX(1); }
+    .v-icon { font-family:var(--fm); font-size:.58rem; letter-spacing:.12em; color:var(--gold); margin-bottom:1rem; display:block; }
+    .v-title { font-family:var(--fh); font-weight:700; font-size:1rem; margin-bottom:.6rem; }
+    .v-desc { font-size:.8rem; line-height:1.75; color:var(--muted); }
+
+    /* PHILOSOPHY SECTION */
+    #philosophy { background:var(--black); border-top:1px solid var(--border); }
+    .philo-inner { display:grid; grid-template-columns:1fr 2fr; gap:6rem; align-items:center; }
+    .philo-label-big { font-family:var(--fh); font-weight:800; font-size:clamp(3rem,6vw,5rem); line-height:1; color:rgba(200,169,110,.08); }
+    .philo-text { font-size:.95rem; line-height:2.1; color:rgba(238,234,226,.65); border-left:2px solid var(--gold-d); padding-left:1.8rem; }
+    .philo-text strong { color:var(--white); font-weight:500; }
+
+    @media(max-width:1024px){
+      .manifesto-inner { grid-template-columns:1fr; gap:2rem; }
+      .value-grid { grid-template-columns:repeat(2,1fr); }
+      .philo-inner { grid-template-columns:1fr; gap:2rem; }
+    }
+    @media(max-width:768px){
+      .value-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="nav" class="scrolled">
+  <a href="index.html" class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="30" width="auto">
+      <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
+    </svg>
+    <span class="nav-tag">// Module Team</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="live.html">Live</a></li>
+    <li><a href="youtube.html">YouTube</a></li>
+    <li><a href="wedding.html">Wedding</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a><a href="live.html">Live</a>
+  <a href="youtube.html">YouTube</a><a href="wedding.html">Wedding</a>
+  <a href="about.html" class="active">About</a><a href="contact.html">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="page-hero">
+  <div class="hero-bg-grid"></div>
+  <div class="page-hero-inner">
+    <span class="page-hero-label reveal">// About ADDMENT</span>
+    <h1 class="page-hero-title reveal"><span class="ko">우리에 대해</span></h1>
+    <div class="page-hero-line"></div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<section id="manifesto">
+  <div class="container">
+    <div class="manifesto-inner">
+      <div class="reveal">
+        <div class="manifesto-label-big">OUR<br/>WAY</div>
+      </div>
+      <div>
+        <h2 class="manifesto-headline reveal">
+          <span class="ko">기획은 클라이언트가,</span><br/>
+          실행은 <em>ADDMENT</em>가
+        </h2>
+        <div class="manifesto-body reveal">
+          <p>ADDMENT는 <strong>B2B 영상 실행 전문팀</strong>입니다. 사내 영상팀을 꾸리기엔 부담스럽고, 대형 프로덕션을 쓰기엔 과도한 — 그 사이의 공백을 채웁니다.</p>
+          <p>우리는 <strong>화려한 기획서로 비용을 높이지 않습니다.</strong> 서비스와 상품을 가장 잘 아는 귀사의 기획안을, 기술적으로 가장 완벽하게 구현하는 것에만 집중합니다.</p>
+          <p>ADDMENT는 크리에이티브 에이전시가 아닙니다. 우리는 <strong>'실행 전문 모듈팀'</strong>입니다. 귀사의 전략 위에 우리의 기술을 얹습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIG QUOTE -->
+<section id="big-quote">
+  <div class="container">
+    <p class="big-quote-text reveal">
+      "우리는 화려한 기획서 대신<br/>
+      <em>완벽한 실행</em>으로 증명합니다."
+    </p>
+    <span class="big-quote-attr reveal">// ADDMENT · Philosophy</span>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section id="values">
+  <div class="container">
+    <span class="sec-label reveal">// Core Values</span>
+    <h2 class="sec-title reveal">우리가 <em>지키는 것들</em></h2>
+    <div class="value-grid">
+      <div class="value-card reveal">
+        <span class="v-icon">COST_EFFICIENT</span>
+        <div class="v-title">70% 비용 절감</div>
+        <div class="v-desc">사내 영상팀 운영 대비 평균 70% 비용을 절감합니다. 고정비 없이 프로젝트 단위로 운영됩니다.</div>
+      </div>
+      <div class="value-card reveal">
+        <span class="v-icon">TECH_DRIVEN</span>
+        <div class="v-title">최신 기술 도입</div>
+        <div class="v-desc">최신 라이브 송출 시스템 및 AI 편집 워크플로우를 운영합니다.</div>
+      </div>
+      <div class="value-card reveal">
+        <span class="v-icon">ON_DEMAND</span>
+        <div class="v-title">모듈형 조직</div>
+        <div class="v-desc">필요한 순간에만 활성화되는 유연한 모듈 구조로 운영됩니다. 원하는 모듈만 선택하세요.</div>
+      </div>
+      <div class="value-card reveal">
+        <span class="v-icon">RELIABLE</span>
+        <div class="v-title">전국 출장 보장</div>
+        <div class="v-desc">전국 어디든 출장 가능, 안정적인 실시간 스트리밍을 보장합니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="container">
+    <div class="philo-inner">
+      <div class="reveal">
+        <div class="philo-label-big">OUR<br/>PHILO<br/>SOPHY</div>
+      </div>
+      <div>
+        <span class="sec-label reveal">// The Philosophy</span>
+        <h2 class="sec-title reveal" style="margin-bottom:2rem">
+          <span class="ko">실행이 곧</span> <em>우리의 언어</em>
+        </h2>
+        <p class="philo-text reveal">
+          많은 프로덕션이 기획과 컨설팅으로 비용을 키웁니다.<br/><br/>
+          ADDMENT는 다릅니다. <strong>귀사가 이미 알고 있는 것을 우리가 다시 설명하게 하지 않습니다.</strong><br/><br/>
+          기획은 귀사가, 실행은 ADDMENT가 — 이 단순한 분업이 가장 효율적인 영상 제작의 방식입니다.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="22" width="auto">
+    <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="rgba(255,255,255,0.5)">ADDMENT</text>
+  </svg>
+  <div class="footer-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
+</footer>
+
+<script>
+(function(){
+  var cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+  (function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+  document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*80);io.unobserve(e.target);}});},{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>

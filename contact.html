@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADDMENT — Contact</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .hero-bg-grid {
+      position:absolute; inset:0;
+      background:
+        linear-gradient(rgba(200,169,110,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(200,169,110,.025) 1px,transparent 1px);
+      background-size:60px 60px;
+    }
+    #page-hero { min-height:50vh; display:flex; align-items:flex-end; padding-top:var(--nav-h); position:relative; overflow:hidden; }
+
+    /* CONTACT BODY */
+    #contact-body { background:var(--deep); }
+    .contact-grid {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:8rem; align-items:start; margin-top:4rem;
+    }
+
+    /* LEFT */
+    .contact-notice {
+      background:rgba(200,169,110,.04); border:1px solid var(--border);
+      border-left:3px solid var(--gold-d); padding:1.6rem 2rem; margin-bottom:3rem;
+    }
+    .contact-notice-label { font-family:var(--fm); font-size:.58rem; letter-spacing:.2em; color:var(--gold); margin-bottom:.6rem; display:block; }
+    .contact-notice p { font-size:.85rem; line-height:1.8; color:rgba(238,234,226,.65); }
+    .contact-notice strong { color:var(--white); font-weight:500; }
+    .email-label { font-family:var(--fm); font-size:.58rem; letter-spacing:.2em; color:var(--muted); margin-bottom:.5rem; display:block; }
+    .email-link {
+      font-family:var(--fh); font-weight:600; font-size:1.2rem;
+      color:var(--gold); text-decoration:none; letter-spacing:.02em;
+      border-bottom:1px solid var(--gold-d); padding-bottom:.2rem;
+      display:inline-block; margin-bottom:2.5rem;
+      transition:color .3s, border-color .3s;
+    }
+    .email-link:hover { color:var(--gold-l); border-color:var(--gold-l); }
+    .contact-meta { font-family:var(--fm); font-size:.68rem; letter-spacing:.1em; color:var(--muted); line-height:2.4; }
+    .contact-meta span { color:var(--white); }
+
+    /* SERVICES QUICK LINKS */
+    .service-links { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:3rem; }
+    .service-link-card {
+      background:var(--surface); border:1px solid var(--border);
+      padding:1.5rem; text-decoration:none; display:block;
+      transition:background .3s; position:relative; overflow:hidden;
+    }
+    .service-link-card::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
+      background:var(--gold-d); transform:scaleX(0);
+      transform-origin:left; transition:transform .35s;
+    }
+    .service-link-card:hover { background:var(--surface2); }
+    .service-link-card:hover::after { transform:scaleX(1); }
+    .sl-label { font-family:var(--fm); font-size:.58rem; letter-spacing:.15em; color:var(--gold-d); margin-bottom:.4rem; display:block; }
+    .sl-name { font-family:var(--fh); font-weight:700; font-size:.95rem; color:var(--white); }
+
+    /* RIGHT — STEPS */
+    .steps-list { list-style:none; }
+    .contact-step {
+      display:flex; gap:1.4rem; align-items:flex-start;
+      padding:1.8rem 0; border-bottom:1px solid var(--border);
+    }
+    .contact-step:first-child { padding-top:0; }
+    .step-num { font-family:var(--fm); font-size:.6rem; color:var(--gold-d); min-width:2rem; padding-top:.1rem; flex-shrink:0; }
+    .step-body { flex:1; }
+    .step-title { font-family:var(--fh); font-weight:700; font-size:1rem; margin-bottom:.4rem; }
+    .step-desc { font-size:.83rem; line-height:1.75; color:var(--muted); }
+    .step-desc strong { color:var(--white); font-weight:500; }
+
+    /* CTA BOTTOM */
+    #cta-bottom { background:var(--black); border-top:1px solid var(--border); padding:6rem 0; text-align:center; }
+    .cta-title { font-family:var(--fh); font-weight:700; font-size:clamp(2rem,5vw,4rem); line-height:1.1; margin-bottom:1rem; }
+    .cta-title .ko { font-family:var(--fb); font-weight:700; }
+    .cta-title em { font-style:normal; color:var(--gold); }
+    .cta-sub { font-size:.95rem; color:rgba(238,234,226,.55); margin-bottom:3rem; line-height:1.9; }
+    .cta-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+    @media(max-width:1024px){ .contact-grid { grid-template-columns:1fr; gap:4rem; } }
+    @media(max-width:768px){ .service-links { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav id="nav" class="scrolled">
+  <a href="index.html" class="nav-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="30" width="auto">
+      <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
+    </svg>
+    <span class="nav-tag">// Module Team</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="live.html">Live</a></li>
+    <li><a href="youtube.html">YouTube</a></li>
+    <li><a href="wedding.html">Wedding</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a><a href="live.html">Live</a>
+  <a href="youtube.html">YouTube</a><a href="wedding.html">Wedding</a>
+  <a href="about.html">About</a><a href="contact.html" class="active">Contact</a>
+</div>
+
+<!-- HERO -->
+<section id="page-hero">
+  <div class="hero-bg-grid"></div>
+  <div class="page-hero-inner">
+    <span class="page-hero-label reveal">// Get In Touch</span>
+    <h1 class="page-hero-title reveal"><span class="ko">프로젝트를</span> <em>시작하세요</em></h1>
+    <div class="page-hero-line"></div>
+  </div>
+</section>
+
+<!-- CONTACT BODY -->
+<section id="contact-body">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- LEFT -->
+      <div>
+        <div class="contact-notice reveal">
+          <span class="contact-notice-label">TIP · 더 빠른 상담을 원하신다면</span>
+          <p><strong>기획안(초안)이 준비되어 있다면 더욱 빠른 상담이 가능합니다.</strong><br/>
+          ADDMENT는 실행 전문팀으로, 귀사의 기획을 기반으로 최적의 모듈을 제안드립니다.</p>
+        </div>
+        <div class="reveal">
+          <span class="email-label">// E-MAIL</span>
+          <a href="mailto:info.addment@gmail.com" class="email-link">info.addment@gmail.com</a>
+        </div>
+        <div class="contact-meta reveal">
+          LOCATION &nbsp;·&nbsp; <span>서울 · 전국 출장 가능</span><br/>
+          OVERSEAS &nbsp;·&nbsp; <span>해외 프로젝트 협의 가능</span><br/>
+          RESPONSE &nbsp;·&nbsp; <span>영업일 기준 24시간 이내</span>
+        </div>
+        <div class="service-links reveal">
+          <a href="live.html" class="service-link-card">
+            <span class="sl-label">// MAIN MODULE</span>
+            <div class="sl-name">Live Streaming</div>
+          </a>
+          <a href="youtube.html" class="service-link-card">
+            <span class="sl-label">// MODULE</span>
+            <div class="sl-name">YouTube Content</div>
+          </a>
+          <a href="wedding.html" class="service-link-card">
+            <span class="sl-label">// SPECIALTY</span>
+            <div class="sl-name">Wedding Archive</div>
+          </a>
+          <a href="about.html" class="service-link-card">
+            <span class="sl-label">// ABOUT</span>
+            <div class="sl-name">팀 소개 & 철학</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT — PROCESS -->
+      <div class="reveal">
+        <span class="sec-label">// Process</span>
+        <h2 class="sec-title" style="margin-bottom:3rem">진행 <em>순서</em></h2>
+        <ul class="steps-list">
+          <li class="contact-step">
+            <span class="step-num">01</span>
+            <div class="step-body">
+              <div class="step-title">기획안 준비</div>
+              <div class="step-desc">행사 개요, 목적, 플랫폼, 예상 일정 등 <strong>초안을 준비</strong>해 주세요. 완성도가 낮아도 괜찮습니다.</div>
+            </div>
+          </li>
+          <li class="contact-step">
+            <span class="step-num">02</span>
+            <div class="step-body">
+              <div class="step-title">모듈 상담</div>
+              <div class="step-desc">필요한 서비스 모듈을 선택하고, <strong>규모에 맞는 견적</strong>을 협의합니다.</div>
+            </div>
+          </li>
+          <li class="contact-step">
+            <span class="step-num">03</span>
+            <div class="step-body">
+              <div class="step-title">실행 계약</div>
+              <div class="step-desc">계약 후 ADDMENT가 <strong>현장 준비부터 마무리</strong>까지 전담합니다.</div>
+            </div>
+          </li>
+          <li class="contact-step">
+            <span class="step-num">04</span>
+            <div class="step-body">
+              <div class="step-title">결과물 납품</div>
+              <div class="step-desc">라이브 종료 또는 영상 편집 완료 후 <strong>즉시 납품</strong>합니다.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section id="cta-bottom">
+  <div class="container">
+    <h2 class="cta-title reveal"><span class="ko">지금 바로</span><br/><em>시작하세요</em></h2>
+    <p class="cta-sub reveal">기획안 없이도 괜찮습니다. 먼저 어떤 모듈이 필요한지 이야기해 주세요.</p>
+    <div class="cta-actions reveal">
+      <a href="mailto:info.addment@gmail.com" class="btn-primary">
+        이메일 문의
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </a>
+      <a href="live.html" class="btn-outline">서비스 보기</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="22" width="auto">
+    <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="rgba(255,255,255,0.5)">ADDMENT</text>
+  </svg>
+  <div class="footer-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
+</footer>
+
+<script>
+(function(){
+  var cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+  (function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+  document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*80);io.unobserve(e.target);}});},{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
