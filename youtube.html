@@ -1,169 +1,137 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ADDMENT — YouTube Content</title>
-  <link rel="stylesheet" href="style.css"/>
-  <style>
-    .hero-bg-grid {
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(rgba(200,169,110,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(200,169,110,.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-    .hero-bg-grid::after {
-      content:''; position:absolute; inset:0;
-      background: radial-gradient(ellipse 70% 60% at 70% 80%, rgba(200,169,110,.05) 0%, transparent 70%);
-    }
-    #page-hero {
-      min-height: 60vh; display:flex; align-items:flex-end;
-      padding-top:var(--nav-h); position:relative; overflow:hidden;
-    }
-    .hero-desc { font-family:var(--fc); font-size:clamp(1.1rem,2.5vw,1.5rem); font-weight:300; line-height:1.8; color:rgba(238,234,226,.65); max-width:600px; margin-top:1.8rem; }
-
-    /* MODULE CARDS */
-    #modules { background: var(--deep); }
-    .module-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:4rem; }
-    .module-card {
-      background:var(--surface); border:1px solid var(--border);
-      padding:3.5rem; position:relative; overflow:hidden;
-      display:flex; flex-direction:column;
-      transition:background .3s;
-    }
-    .module-card:hover { background:var(--surface2); }
-    .module-card::after {
-      content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
-      background:linear-gradient(to right, transparent, var(--gold-d), transparent);
-      transform:scaleX(0); transition:transform .5s;
-    }
-    .module-card:hover::after { transform:scaleX(1); }
-    .module-tag { font-family:var(--fm); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; border:1px solid var(--gold-d); color:var(--gold-d); padding:.25rem .7rem; display:inline-block; margin-bottom:1.5rem; width:fit-content; }
-    .module-name { font-family:var(--fh); font-weight:700; font-size:1.8rem; margin-bottom:.5rem; }
-    .module-ko { font-family:var(--fb); font-size:.85rem; color:var(--muted); margin-bottom:1.5rem; }
-    .module-desc { font-size:.88rem; line-height:1.85; color:rgba(238,234,226,.6); flex:1; margin-bottom:2rem; }
-    .module-list { list-style:none; display:flex; flex-direction:column; gap:.7rem; margin-bottom:2.5rem; }
-    .module-list li { display:flex; gap:.8rem; font-size:.82rem; color:rgba(238,234,226,.7); }
-    .module-list li::before { content:'—'; color:var(--gold-d); font-family:var(--fm); flex-shrink:0; }
-    .module-list li strong { color:var(--white); font-weight:500; }
-
-    /* PROCESS */
-    #process { background:var(--black); border-top:1px solid var(--border); }
-    .process-row { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; margin-top:4rem; }
-    .process-text p { font-size:.95rem; line-height:2; color:rgba(238,234,226,.65); margin-bottom:1.2rem; }
-    .process-text strong { color:var(--white); font-weight:500; }
-    .process-steps { list-style:none; display:flex; flex-direction:column; }
-    .process-step { display:flex; gap:1.2rem; padding:1.5rem 0; border-bottom:1px solid var(--border); align-items:flex-start; }
-    .p-num { font-family:var(--fm); font-size:.6rem; color:var(--gold-d); min-width:1.5rem; padding-top:.1rem; }
-    .p-title { font-family:var(--fh); font-weight:700; font-size:.9rem; margin-bottom:.3rem; }
-    .p-desc { font-size:.8rem; line-height:1.7; color:var(--muted); }
-
-    @media(max-width:1024px){
-      .module-grid { grid-template-columns:1fr; }
-      .process-row { grid-template-columns:1fr; gap:3rem; }
-    }
-  </style>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ADDMENT — YouTube Content</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.module-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3.5rem}
+.module-card{background:var(--surface);border:1px solid var(--border);padding:3.5rem;display:flex;flex-direction:column;transition:background .3s}
+.module-card:hover{background:var(--surface2)}
+.mod-tag{font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--gold-d);color:var(--gold-d);padding:.25rem .7rem;display:inline-block;margin-bottom:1.5rem;width:fit-content}
+.mod-name{font-family:var(--fh);font-weight:700;font-size:1.7rem;margin-bottom:.25rem}
+.mod-ko{font-family:var(--fb);font-size:.8rem;color:var(--muted);margin-bottom:.8rem}
+.mod-price{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.4rem;font-weight:600;line-height:1;margin-bottom:.3rem;letter-spacing:.01em}
+.mod-price .won{font-family:var(--fb);font-size:.9rem;font-weight:400;color:var(--muted);margin-left:.2rem}
+.mod-price-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.12em;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.mod-desc{font-size:.88rem;line-height:1.85;color:rgba(238,234,226,.6);flex:1;margin-bottom:1.8rem}
+.mod-list{list-style:none;display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.5rem}
+.mod-list li{display:flex;gap:.8rem;font-size:.82rem;color:rgba(238,234,226,.7)}
+.mod-list li::before{content:'—';color:var(--gold-d);font-family:var(--fm);flex-shrink:0}
+.mod-list li strong{color:var(--white);font-weight:500}
+.process-row{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center}
+.process-steps{list-style:none}
+.p-step{display:flex;gap:1.2rem;padding:1.5rem 0;border-bottom:1px solid var(--border)}
+.p-num{font-family:var(--fm);font-size:.6rem;color:var(--gold-d);min-width:2rem;padding-top:.1rem}
+.p-title{font-family:var(--fh);font-weight:700;font-size:.9rem;margin-bottom:.3rem}
+.p-desc{font-size:.8rem;line-height:1.7;color:var(--muted)}
+@media(max-width:1024px){.module-grid{grid-template-columns:1fr}.process-row{grid-template-columns:1fr;gap:3rem}}
+</style>
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-
 <nav id="nav" class="scrolled">
   <a href="index.html" class="nav-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="30" width="auto">
-      <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="32" width="auto">
+      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="#ffffff" letter-spacing="2">ADDMENT</text>
     </svg>
     <span class="nav-tag">// Module Team</span>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="live.html">Live</a></li>
-    <li><a href="youtube.html" class="active">YouTube</a></li>
-    <li><a href="wedding.html">Wedding</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a href="index.html">Home</a></li><li><a href="live.html">Live</a></li>
+    <li><a href="youtube.html" class="active">YouTube</a></li><li><a href="wedding.html">Wedding</a></li>
+    <li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li>
   </ul>
   <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html">Home</a><a href="live.html">Live</a>
-  <a href="youtube.html" class="active">YouTube</a>
-  <a href="wedding.html">Wedding</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  <a href="youtube.html" class="active">YouTube</a><a href="wedding.html">Wedding</a>
+  <a href="about.html">About</a><a href="contact.html">Contact</a>
 </div>
 
-<section id="page-hero">
+<div class="page-hero">
   <div class="hero-bg-grid"></div>
   <div class="page-hero-inner">
     <span class="page-hero-label reveal">// YouTube Content Module</span>
     <h1 class="page-hero-title reveal"><span class="ko">유튜브 콘텐츠</span> <em>제작</em></h1>
-    <p class="hero-desc reveal">
-      귀사의 채널을 위한 전담 기술팀.<br/>
-      복잡한 기획은 귀사가, 촬영과 편집은 ADDMENT가 책임집니다.
-    </p>
+    <p class="page-hero-sub reveal">귀사의 채널을 위한 전담 기술팀.<br/>복잡한 기획은 귀사가, 촬영과 편집은 ADDMENT가 책임집니다.</p>
     <div class="page-hero-line"></div>
   </div>
-</section>
+</div>
 
-<section id="modules">
+<!-- MODULES + PRICING -->
+<section style="background:var(--deep)">
   <div class="container">
-    <span class="sec-label reveal">// Service Modules</span>
+    <span class="sec-label reveal">// Service Modules &amp; Pricing</span>
     <h2 class="sec-title reveal">두 가지 <em>모듈</em></h2>
     <div class="module-grid">
+      <!-- SHORT-FORM -->
       <div class="module-card reveal">
-        <span class="module-tag">Short-form Module</span>
-        <div class="module-name">숏폼 콘텐츠</div>
-        <div class="module-ko">Short-form Content Production</div>
-        <p class="module-desc">빠르게 소비되는 숏폼 시대에 맞춘 고효율 제작 모듈. 귀사의 상품과 메시지를 짧고 강렬하게 전달합니다.</p>
-        <ul class="module-list">
+        <span class="mod-tag">Short-form Module</span>
+        <div class="mod-name">숏폼 콘텐츠</div>
+        <div class="mod-ko">Short-form Content Production</div>
+        <div class="mod-price">150,000<span class="won">원</span></div>
+        <div class="mod-price-label">5건 패키지</div>
+        <p class="mod-desc">빠르게 소비되는 숏폼 시대에 맞춘 고효율 제작 모듈. 귀사의 상품과 메시지를 짧고 강렬하게 전달합니다.</p>
+        <ul class="mod-list">
           <li><strong>숏폼 콘텐츠 5건 제작</strong></li>
           <li>60초 이내 편집 최적화</li>
           <li>자막 및 사운드 디자인 포함</li>
           <li>YouTube Shorts / Instagram Reels / TikTok 최적화</li>
         </ul>
-        <a href="contact.html" class="btn-outline" style="width:100%;justify-content:center;">별도 문의</a>
+        <a href="contact.html" class="price-cta" style="margin-top:auto">별도 문의</a>
       </div>
+      <!-- STANDARD -->
       <div class="module-card reveal">
-        <span class="module-tag">Full-version Module</span>
-        <div class="module-name">정기 채널 운영</div>
-        <div class="module-ko">Full-version Content & Channel Management</div>
-        <p class="module-desc">월 단위 계약으로 채널 운영의 부담을 ADDMENT가 함께 집니다. 기획은 귀사가, 나머지는 우리가.</p>
-        <ul class="module-list">
+        <span class="mod-tag">Full-version Module</span>
+        <div class="mod-name">정기 채널 운영</div>
+        <div class="mod-ko">Full-version Content &amp; Channel Management</div>
+        <div class="mod-price">450,000<span class="won">원 / 월</span></div>
+        <div class="mod-price-label">월 단위 계약</div>
+        <p class="mod-desc">월 단위 계약으로 채널 운영의 부담을 ADDMENT가 함께 집니다. 기획은 귀사가, 나머지는 우리가.</p>
+        <ul class="mod-list">
           <li><strong>월 단위 정기 계약</strong></li>
           <li>정기 촬영 스케줄 관리</li>
           <li>전문 편집 및 색보정</li>
           <li>썸네일 디자인 포함</li>
           <li>업로드 스케줄 관리 협의 가능</li>
         </ul>
-        <a href="contact.html" class="btn-outline" style="width:100%;justify-content:center;">별도 문의</a>
+        <a href="contact.html" class="price-cta" style="margin-top:auto">별도 문의</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="process">
+<!-- SELECTED WORKS -->
+<div class="works-section">
+  <div class="container">
+    <span class="sec-label reveal">// Selected Works</span>
+    <h2 class="sec-title reveal">유튜브 <em>레퍼런스</em></h2>
+    <div class="works-grid reveal">
+      <div class="works-card"><canvas class="works-canvas" data-seed="21"></canvas><span class="works-label">// Short-form 01</span></div>
+      <div class="works-card"><canvas class="works-canvas" data-seed="22"></canvas><span class="works-label">// Standard 01</span></div>
+      <div class="works-card"><canvas class="works-canvas" data-seed="23"></canvas><span class="works-label">// Standard 02</span></div>
+    </div>
+    <p class="works-note reveal">// 포트폴리오 영상은 문의 후 제공됩니다 · 추후 유튜브 링크로 교체 예정</p>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<section style="background:var(--black);border-top:1px solid var(--border)">
   <div class="container">
     <div class="process-row">
-      <div class="process-text reveal">
+      <div class="reveal">
         <span class="sec-label">// Our Approach</span>
         <h2 class="sec-title" style="margin-bottom:2rem"><em>기획은 귀사가,</em><br/><span class="ko">실행은 ADDMENT가</span></h2>
-        <p>우리는 <strong>콘텐츠 기획에 관여하지 않습니다.</strong> 귀사가 가장 잘 아는 브랜드와 메시지를 기반으로, ADDMENT는 오직 기술적 실행에만 집중합니다.</p>
-        <p>불필요한 기획 미팅, 과도한 방향 제안 없이 — 빠르고 정확하게 결과물을 납품합니다.</p>
+        <p style="font-size:.9rem;line-height:2;color:rgba(238,234,226,.6)">우리는 콘텐츠 기획에 관여하지 않습니다. 귀사가 가장 잘 아는 브랜드와 메시지를 기반으로, ADDMENT는 오직 기술적 실행에만 집중합니다.</p>
       </div>
       <div class="reveal">
         <ul class="process-steps">
-          <li class="process-step">
-            <span class="p-num">01</span>
-            <div><div class="p-title">콘텐츠 기획안 전달</div><div class="p-desc">촬영할 내용과 방향을 간단히 공유해 주세요.</div></div>
-          </li>
-          <li class="process-step">
-            <span class="p-num">02</span>
-            <div><div class="p-title">촬영 일정 조율</div><div class="p-desc">장소와 일정을 맞춰 촬영팀이 방문합니다.</div></div>
-          </li>
-          <li class="process-step">
-            <span class="p-num">03</span>
-            <div><div class="p-title">편집 및 납품</div><div class="p-desc">편집 완료 후 검토 없이 즉시 납품하거나, 1회 수정 협의 가능합니다.</div></div>
-          </li>
+          <li class="p-step"><span class="p-num">01</span><div><div class="p-title">콘텐츠 기획안 전달</div><div class="p-desc">촬영할 내용과 방향을 간단히 공유해 주세요.</div></div></li>
+          <li class="p-step"><span class="p-num">02</span><div><div class="p-title">촬영 일정 조율</div><div class="p-desc">장소와 일정을 맞춰 촬영팀이 방문합니다.</div></div></li>
+          <li class="p-step"><span class="p-num">03</span><div><div class="p-title">편집 및 납품</div><div class="p-desc">편집 완료 후 즉시 납품합니다.</div></div></li>
         </ul>
       </div>
     </div>
@@ -171,21 +139,25 @@
 </section>
 
 <footer>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="22" width="auto">
-    <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="rgba(255,255,255,0.5)">ADDMENT</text>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="22" width="auto">
+    <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="rgba(255,255,255,0.38)" letter-spacing="2">ADDMENT</text>
   </svg>
   <div class="footer-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
 </footer>
-
 <script>
 (function(){
-  var cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-  var mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-  (function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
-  document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
-  var io=new IntersectionObserver(function(entries){entries.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*80);io.unobserve(e.target);}});},{threshold:.08});
-  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+(function tick(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',scrollY>40);});
+document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
+var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+var wcs=document.querySelectorAll('.works-canvas'),wctx=[],wt=[];
+wcs.forEach(function(c){c.width=c.parentElement.offsetWidth||400;c.height=Math.round(c.width*9/16);wctx.push(c.getContext('2d'));wt.push(Math.random()*100);});
+function wg(ctx,W,H,seed,t){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);for(var y=0;y<H;y+=4){ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,y,W,2);}for(var b=0;b<6+seed%5;b++){var by=((b/(6+seed%5)+t*.003)%1)*H;var ba=.04+Math.abs(Math.sin(t*.04+b*1.8))*.08;ctx.fillStyle='rgba(200,169,110,'+ba+')';ctx.fillRect(0,by,W,2+Math.abs(Math.sin(t*.03+b))*4);}for(var p=0;p<20+seed%3*4;p++){var px=(Math.sin(t*.016+p*.8+seed)*.5+.5)*W;var py=(Math.cos(t*.012+p*1.1+seed*.4)*.5+.5)*H;var pa=.06+Math.abs(Math.sin(t*.02+p*.4))*.18;ctx.beginPath();ctx.arc(px,py,.5+Math.abs(Math.sin(t*.05+p))*1.2,0,Math.PI*2);ctx.fillStyle='rgba(200,169,110,'+pa+')';ctx.fill();}}
+(function anim(){requestAnimationFrame(anim);wcs.forEach(function(c,i){wt[i]+=.4;wg(wctx[i],c.width,c.height,parseInt(c.dataset.seed)||21,wt[i]);});})();
 })();
 </script>
 </body>

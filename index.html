@@ -1,157 +1,86 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ADDMENT — 모듈형 영상 제작팀</title>
-  <link rel="stylesheet" href="style.css"/>
-  <style>
-    body { overflow: hidden; height: 100vh; }
-
-    /* ── FULL CANVAS HERO ── */
-    #hero-canvas {
-      position: fixed; inset: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-    }
-
-    /* ── DIGITAL CLOCK ── */
-    .clock-wrap {
-      position: fixed; bottom: 2.5rem; right: 4rem;
-      z-index: 10; text-align: right;
-      opacity: 0; animation: fadeIn 1s 1.8s forwards;
-    }
-    .clock-label {
-      font-family: var(--fm); font-size: .55rem;
-      letter-spacing: .25em; color: var(--gold-d);
-      text-transform: uppercase; margin-bottom: .3rem;
-      display: block;
-    }
-    .clock-time {
-      font-family: var(--fm); font-size: 1.1rem;
-      color: var(--gold); letter-spacing: .08em;
-      font-weight: 300;
-    }
-    .clock-ms {
-      font-size: .65rem; color: var(--gold-d);
-      margin-left: .2rem;
-    }
-
-    /* ── FLOATING KEYWORDS ── */
-    .keyword {
-      position: fixed;
-      font-family: var(--fm); font-size: .7rem;
-      letter-spacing: .15em; text-transform: uppercase;
-      color: rgba(200,169,110,0.5);
-      pointer-events: none; z-index: 5;
-      white-space: nowrap;
-      transition: opacity 2s ease;
-    }
-
-    /* ── CENTER CONTENT ── */
-    .hero-center {
-      position: fixed; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      z-index: 10; text-align: center;
-      padding: 0 2rem;
-    }
-    .hero-eyebrow {
-      font-family: var(--fm); font-size: .65rem;
-      letter-spacing: .4em; color: var(--gold);
-      text-transform: uppercase; margin-bottom: 2rem;
-      opacity: 0; animation: fadeUp .8s .4s forwards;
-    }
-    .hero-title {
-      font-family: var(--fh); font-weight: 800;
-      font-size: clamp(2.8rem,8vw,7rem);
-      line-height: .92; letter-spacing: -.03em;
-      margin-bottom: 1.8rem;
-      opacity: 0; animation: fadeUp .9s .6s forwards;
-    }
-    .hero-title .ko {
-      font-family: var(--fb); font-weight: 700;
-      font-size: clamp(1.6rem,4vw,3.5rem);
-      display: block; color: rgba(238,234,226,.7);
-      letter-spacing: -.01em; margin-bottom: .5rem;
-    }
-    .hero-title .brand { color: var(--gold); }
-    .hero-sub {
-      font-size: clamp(.85rem,1.5vw,1rem);
-      line-height: 1.9; color: rgba(238,234,226,.55);
-      max-width: 520px; margin-bottom: 3rem;
-      opacity: 0; animation: fadeUp .9s .8s forwards;
-    }
-    .hero-sub strong { color: var(--white); font-weight: 500; }
-    .hero-actions {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-      justify-content: center;
-      opacity: 0; animation: fadeUp .9s 1s forwards;
-    }
-
-    /* ── SCROLL HINT ── */
-    .scroll-hint {
-      position: fixed; bottom: 2.5rem; left: 50%;
-      transform: translateX(-50%);
-      display: flex; flex-direction: column;
-      align-items: center; gap: .6rem;
-      z-index: 10;
-      opacity: 0; animation: fadeIn 1s 1.5s forwards;
-    }
-    .scroll-hint span {
-      font-family: var(--fm); font-size: .58rem;
-      letter-spacing: .3em; color: var(--muted);
-      text-transform: uppercase;
-    }
-    .scroll-bar {
-      width: 1px; height: 50px;
-      background: linear-gradient(to bottom, var(--gold-d), transparent);
-      animation: scrollPulse 2s infinite;
-    }
-    @keyframes scrollPulse {
-      0%,100% { opacity:.4; transform: scaleY(1); }
-      50%      { opacity:1;  transform: scaleY(1.1); }
-    }
-
-    /* ── LIVE DOT ── */
-    .live-badge {
-      position: fixed; top: calc(var(--nav-h) + 1.5rem); right: 4rem;
-      display: flex; align-items: center; gap: .5rem;
-      font-family: var(--fm); font-size: .6rem;
-      letter-spacing: .15em; color: var(--muted);
-      z-index: 10;
-      opacity: 0; animation: fadeIn 1s 1.6s forwards;
-    }
-    .live-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #e05c5c;
-      animation: livePulse 1.8s infinite;
-    }
-    @keyframes livePulse {
-      0%,100% { box-shadow: 0 0 0 2px rgba(224,92,92,.2); }
-      50%      { box-shadow: 0 0 0 6px rgba(224,92,92,0); }
-    }
-
-    @media (max-width: 768px) {
-      .clock-wrap { right: 1.5rem; bottom: 5rem; }
-      .live-badge { right: 1.5rem; }
-      .scroll-hint { display: none; }
-    }
-  </style>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ADDMENT — 모듈형 영상 제작팀</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+html,body{overflow:hidden;height:100vh}
+#three-canvas{position:fixed;inset:0;z-index:0;width:100%;height:100%}
+/* NAV override for home */
+nav{opacity:0;animation:fadeIn .8s .5s forwards}
+/* LIVE BADGE */
+.live-badge{position:fixed;top:calc(var(--nav-h) + 1.2rem);right:4rem;display:flex;align-items:center;gap:.5rem;font-family:var(--fm);font-size:.58rem;letter-spacing:.15em;color:var(--muted);z-index:50;opacity:0;animation:fadeIn .8s 1.2s forwards}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#e05c5c;animation:livePulse 1.8s infinite}
+/* CLOCK */
+.clock-wrap{position:fixed;bottom:2.8rem;right:4rem;z-index:50;text-align:right;opacity:0;animation:fadeIn .8s 1.4s forwards}
+.clock-label{font-family:var(--fm);font-size:.5rem;letter-spacing:.25em;color:rgba(200,169,110,.3);text-transform:uppercase;margin-bottom:.2rem;display:block}
+.clock-time{font-family:var(--fm);font-size:.88rem;color:rgba(200,169,110,.55);letter-spacing:.06em;font-weight:300}
+.clock-ms{font-size:.54rem;color:rgba(200,169,110,.3)}
+/* SOUND */
+.sound-toggle{position:fixed;bottom:2.8rem;left:4rem;z-index:50;display:flex;align-items:center;gap:.55rem;cursor:pointer;opacity:0;animation:fadeIn .8s 1.6s forwards;background:none;border:1px solid rgba(200,169,110,.08);padding:.4rem .9rem;transition:border-color .3s}
+.sound-toggle:hover{border-color:rgba(200,169,110,.25)}
+.sound-icon svg{width:15px;height:15px;display:block}
+.sound-label{font-family:var(--fm);font-size:.52rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+/* SCROLL CONTAINER */
+#sc{position:fixed;inset:0;z-index:10;overflow-y:scroll;overflow-x:hidden;scroll-snap-type:y mandatory}
+#sc::-webkit-scrollbar{display:none}
+/* S1 */
+#s1{height:100vh;scroll-snap-align:start;display:flex;align-items:flex-end;padding:0 4rem 3.5rem;position:relative}
+.s1-foot{display:flex;align-items:flex-end;justify-content:space-between;width:100%;opacity:0;animation:fadeIn .9s 1s forwards}
+.s1-tag{font-family:var(--fm);font-size:.56rem;letter-spacing:.28em;color:rgba(200,169,110,.35);text-transform:uppercase;line-height:2.4}
+.s1-hint{display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.s1-hint span{font-family:var(--fm);font-size:.52rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+.s1-bar{width:1px;height:42px;background:linear-gradient(to bottom,rgba(200,169,110,.5),transparent);animation:scrollPulse 2s infinite}
+/* S2 - CARDS */
+#s2{min-height:100vh;scroll-snap-align:start;padding:calc(var(--nav-h) + 3.5rem) 4rem 5rem;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,.7) 0%,rgba(0,0,0,.95) 30%)}
+.s2-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;transform:translateY(20px);transition:all .7s}
+.s2-title{font-family:var(--fh);font-weight:700;font-size:clamp(1.8rem,4vw,3rem);margin-bottom:3rem;opacity:0;transform:translateY(20px);transition:all .7s .1s}
+.s2-title em{font-style:normal;color:var(--gold)}
+.s2-label.in,.s2-title.in{opacity:1;transform:none}
+.vcards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.vcard{position:relative;aspect-ratio:16/9;overflow:hidden;display:block;text-decoration:none;background:#000;opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+.vcard.in{opacity:1;transform:none}
+.vcard:nth-child(1){transition-delay:.1s}.vcard:nth-child(2){transition-delay:.22s}.vcard:nth-child(3){transition-delay:.34s}
+.vcard-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vcard-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.05) 70%,transparent 100%);transition:opacity .4s}
+.vcard:hover .vcard-overlay{opacity:.5}
+.vcard-content{position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.8rem;z-index:2;transform:translateY(5px);transition:transform .4s}
+.vcard:hover .vcard-content{transform:none}
+.vcard-tag{font-family:var(--fm);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;display:block}
+.vcard-name{font-family:var(--fh);font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:.2rem}
+.vcard-ko{font-family:var(--fb);font-size:.72rem;color:rgba(238,234,226,.4)}
+.vcard-arrow{position:absolute;top:1.2rem;right:1.5rem;width:30px;height:30px;border:1px solid rgba(200,169,110,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.75rem;opacity:0;transform:scale(.8);transition:all .4s}
+.vcard:hover .vcard-arrow{opacity:1;transform:scale(1)}
+.vcard::before{content:'';position:absolute;inset:0;z-index:1;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none}
+/* S3 - STATEMENT */
+#s3{min-height:65vh;scroll-snap-align:start;display:flex;align-items:center;padding:5rem 4rem;border-top:1px solid rgba(200,169,110,.07);position:relative;z-index:1;background:rgba(0,0,0,.96)}
+.brand-stmt{max-width:860px;font-family:var(--fh);font-weight:700;font-size:clamp(1.8rem,4.5vw,3.5rem);line-height:1.12;letter-spacing:-.02em}
+.brand-stmt .ko{font-family:var(--fb);font-weight:700}
+.brand-stmt em{font-style:normal;color:var(--gold)}
+.brand-stmt .dim{color:rgba(238,234,226,.25)}
+.brand-cta{margin-top:3rem;display:flex;gap:1rem;flex-wrap:wrap}
+/* FOOTER on home */
+#s-foot{scroll-snap-align:start;padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(200,169,110,.08);position:relative;z-index:1;background:#000}
+.foot-copy{font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:var(--muted)}
+@media(max-width:768px){
+  #s1,#s2,#s3,#s-foot{padding-left:1.5rem;padding-right:1.5rem}
+  .vcards{grid-template-columns:1fr}.live-badge{right:1.5rem}
+  .clock-wrap{right:1.5rem;bottom:5rem}.sound-toggle{left:1.5rem;bottom:5rem}
+  .nav-links{display:none}.nav-hamburger{display:flex}nav{padding:0 1.5rem}
+}
+</style>
 </head>
 <body>
-
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
+<canvas id="three-canvas"></canvas>
+<audio id="bgm" src="assets/bgm.mp3" loop preload="none"></audio>
 
-<!-- CANVAS -->
-<canvas id="hero-canvas"></canvas>
-
-<!-- NAV -->
 <nav id="nav">
   <a href="index.html" class="nav-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="30" width="auto">
-      <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="32" width="auto">
+      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="#ffffff" letter-spacing="2">ADDMENT</text>
     </svg>
     <span class="nav-tag">// Module Team</span>
   </a>
@@ -163,235 +92,241 @@
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <div class="nav-hamburger" id="hamburger">
-    <span></span><span></span><span></span>
-  </div>
+  <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </nav>
-
-<!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="index.html" class="active">Home</a>
-  <a href="live.html">Live</a>
-  <a href="youtube.html">YouTube</a>
-  <a href="wedding.html">Wedding</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
+  <a href="index.html" class="active">Home</a><a href="live.html">Live</a>
+  <a href="youtube.html">YouTube</a><a href="wedding.html">Wedding</a>
+  <a href="about.html">About</a><a href="contact.html">Contact</a>
 </div>
 
-<!-- LIVE BADGE -->
 <div class="live-badge"><div class="live-dot"></div>ON-DEMAND PRODUCTION</div>
-
-<!-- FLOATING KEYWORDS (JS로 생성) -->
-
-<!-- CENTER CONTENT -->
-<div class="hero-center">
-  <p class="hero-eyebrow">// ADDMENT · Modular Video Team</p>
-  <h1 class="hero-title">
-    <span class="ko">귀사의 기획에 기술적인 움직임을</span>
-    더합니다. <span class="brand">ADDMENT</span>
-  </h1>
-  <p class="hero-sub">
-    <strong>비싼 기획비와 고정비 대신,</strong> 필요할 때만 가동되는 '모듈형 영상팀'을 고용하세요.<br/>
-    출장 라이브부터 AI 영상까지 — 우리는 <strong>실행에만 집중합니다.</strong>
-  </p>
-  <div class="hero-actions">
-    <a href="live.html" class="btn-primary">
-      서비스 보기
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-    </a>
-    <a href="contact.html" class="btn-outline">문의하기</a>
-  </div>
-</div>
-
-<!-- CLOCK -->
 <div class="clock-wrap">
   <span class="clock-label">// Live Sync</span>
-  <div class="clock-time" id="clockTime">00:00:00<span class="clock-ms" id="clockMs">.000</span></div>
+  <div class="clock-time" id="ct">00:00:00<span class="clock-ms" id="cms">.000</span></div>
+</div>
+<button class="sound-toggle" id="sndBtn">
+  <span class="sound-icon">
+    <svg viewBox="0 0 20 20" fill="none" stroke="rgba(200,169,110,.5)" stroke-width="1.2" stroke-linecap="round">
+      <path d="M3 7H7L12 3V17L7 13H3V7Z"/>
+      <path id="sw1" d="M15 7C16.5 8 16.5 12 15 13"/>
+      <path id="sw2" d="M17 5C19.5 7 19.5 13 17 15"/>
+    </svg>
+  </span>
+  <span class="sound-label" id="sndLbl">Sound Off</span>
+</button>
+
+<div id="sc">
+  <!-- S1: PURE VISUAL -->
+  <section id="s1">
+    <div class="s1-foot">
+      <div class="s1-tag">귀사의 기획에 기술적인 움직임을 더합니다<br/>Modular · On-Demand · B2B</div>
+      <div class="s1-hint"><div class="s1-bar"></div><span>Scroll</span></div>
+    </div>
+  </section>
+
+  <!-- S2: GLITCH VIDEO CARDS -->
+  <section id="s2">
+    <div class="s2-label" id="s2lbl">// Selected Works &amp; Services</div>
+    <div class="s2-title" id="s2ttl"><em>서비스</em> 모듈</div>
+    <div class="vcards">
+      <a class="vcard" href="live.html">
+        <canvas class="vcard-canvas" data-seed="1"></canvas>
+        <div class="vcard-overlay"></div><div class="vcard-arrow">↗</div>
+        <div class="vcard-content">
+          <span class="vcard-tag">Main Module · Live</span>
+          <div class="vcard-name">Live Streaming</div>
+          <div class="vcard-ko">출장 라이브 스트리밍</div>
+        </div>
+      </a>
+      <a class="vcard" href="youtube.html">
+        <canvas class="vcard-canvas" data-seed="2"></canvas>
+        <div class="vcard-overlay"></div><div class="vcard-arrow">↗</div>
+        <div class="vcard-content">
+          <span class="vcard-tag">Module · YouTube</span>
+          <div class="vcard-name">YouTube Content</div>
+          <div class="vcard-ko">유튜브 콘텐츠 제작</div>
+        </div>
+      </a>
+      <a class="vcard" href="wedding.html">
+        <canvas class="vcard-canvas" data-seed="3"></canvas>
+        <div class="vcard-overlay"></div><div class="vcard-arrow">↗</div>
+        <div class="vcard-content">
+          <span class="vcard-tag">Specialty · Personal</span>
+          <div class="vcard-name">Wedding Archive</div>
+          <div class="vcard-ko">웨딩 아카이브</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- S3: BRAND STATEMENT -->
+  <section id="s3">
+    <div>
+      <p class="brand-stmt reveal">
+        <span class="ko">기획은 클라이언트가,</span><br/>
+        실행은 <em>ADDMENT</em>가.<br/>
+        <span class="dim">우리는 화려한 기획서 대신<br/>완벽한 실행으로 증명합니다.</span>
+      </p>
+      <div class="brand-cta reveal">
+        <a href="live.html" class="btn-primary">서비스 보기 →</a>
+        <a href="contact.html" class="btn-outline">문의하기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div id="s-foot">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="22" width="auto">
+      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="rgba(255,255,255,0.38)" letter-spacing="2">ADDMENT</text>
+    </svg>
+    <div class="foot-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
+  </div>
 </div>
 
-<!-- SCROLL HINT -->
-<div class="scroll-hint">
-  <div class="scroll-bar"></div>
-  <span>Explore</span>
-</div>
-
-<!-- FOOTER -->
-<footer style="position:fixed;bottom:0;left:0;right:0;z-index:1;background:transparent;border:none;padding:0;">
-</footer>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-(function() {
-  // ── Cursor ──
-  var cursor = document.getElementById('cursor');
-  var ring   = document.getElementById('cursorRing');
-  var mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove', function(e){mx=e.clientX;my=e.clientY;});
-  (function tick(){
-    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
-    rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
-    ring.style.left=rx+'px'; ring.style.top=ry+'px';
-    requestAnimationFrame(tick);
-  })();
+(function(){
+/* CURSOR */
+var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+(function tick(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
 
-  // ── Nav ──
-  var nav = document.getElementById('nav');
-  window.addEventListener('scroll', function(){
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+/* NAV */
+document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
+
+/* CLOCK */
+setInterval(function(){
+  var n=new Date();
+  document.getElementById('ct').childNodes[0].textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
+  document.getElementById('cms').textContent='.'+String(n.getMilliseconds()).padStart(3,'0');
+},1);
+
+/* SOUND */
+var bgm=document.getElementById('bgm'),sndOn=false,firstClick=false;
+function setSound(on){
+  sndOn=on;
+  document.getElementById('sndLbl').textContent=on?'Sound On':'Sound Off';
+  document.getElementById('sw1').style.opacity=on?'1':'.2';
+  document.getElementById('sw2').style.opacity=on?'1':'.2';
+  if(on){
+    bgm.volume=0;bgm.play().catch(function(){});
+    var v=0,fi=setInterval(function(){v=Math.min(v+.025,.4);bgm.volume=v;if(v>=.4)clearInterval(fi);},80);
+  } else {
+    var v2=bgm.volume,fi2=setInterval(function(){v2=Math.max(v2-.04,0);bgm.volume=v2;if(v2<=0){bgm.pause();clearInterval(fi2);}},60);
+  }
+}
+document.getElementById('sndBtn').addEventListener('click',function(){setSound(!sndOn);});
+document.addEventListener('click',function(){if(!firstClick){firstClick=true;setSound(true);}},{once:true});
+
+/* THREE.JS — GLSL NOISE MESH "ADD" CONCEPT */
+var renderer,scene,camera,mesh,ut=0,um=new THREE.Vector2();
+function initThree(){
+  var c=document.getElementById('three-canvas');
+  renderer=new THREE.WebGLRenderer({canvas:c,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setClearColor(0x000000,1);
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);
+  camera.position.z=3;
+  var geo=new THREE.PlaneGeometry(8,8,160,160);
+  var mat=new THREE.ShaderMaterial({
+    uniforms:{uT:{value:0},uM:{value:um},uC:{value:new THREE.Color(0xc8a96e)}},
+    vertexShader:`
+uniform float uT;uniform vec2 uM;varying float vD;varying vec2 vUv;
+vec3 m3(vec3 x){return x-floor(x*(1./289.))*289.;}vec4 m4(vec4 x){return x-floor(x*(1./289.))*289.;}
+vec4 pe(vec4 x){return m4(((x*34.)+1.)*x);}
+float sn(vec3 v){
+  const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
+  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=m3(i);
+  vec4 p=pe(pe(pe(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+  vec3 ns=.142857142857*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);
+  vec4 xx=floor(j*ns.z);vec4 yy=floor(j-7.*xx);
+  vec4 xn=xx*ns.x+ns.yyyy;vec4 yn=yy*ns.x+ns.yyyy;vec4 h=1.-abs(xn)-abs(yn);
+  vec4 b0=vec4(xn.xy,yn.xy);vec4 b1=vec4(xn.zw,yn.zw);
+  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
+  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
+  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}
+void main(){
+  vUv=uv;vec3 pos=position;
+  /* ADD concept: 3 noise layers combine → expanding energy */
+  float n1=sn(vec3(pos.xy*1.1,uT*.15));
+  float n2=sn(vec3(pos.xy*2.6+1.4,uT*.10));
+  float n3=sn(vec3(pos.xy*.55-.9,uT*.07));
+  float d=n1*.5+n2*.25+n3*.35;
+  vec2 md=pos.xy-uM*2.5;float mf=1.-smoothstep(0.,2.,length(md));
+  d+=mf*.3;pos.z=d*.52;vD=d;
+  gl_Position=projectionMatrix*modelViewMatrix*vec4(pos,1.);
+}`,
+    fragmentShader:`
+uniform vec3 uC;uniform float uT;varying float vD;varying vec2 vUv;
+void main(){
+  float b=smoothstep(-.4,.85,vD);
+  vec3 col=mix(vec3(.02,.015,.005),uC,b);col=mix(col,vec3(.9,.8,.5),b*b*.4);
+  vec2 c=vUv-.5;float edge=1.-smoothstep(.18,.5,length(c));
+  gl_FragColor=vec4(col,edge*(.6+b*.4));
+}`,
+    transparent:true,side:THREE.DoubleSide
   });
-  document.getElementById('hamburger').addEventListener('click', function(){
-    document.getElementById('mobileMenu').classList.toggle('open');
-  });
+  mesh=new THREE.Mesh(geo,mat);mesh.rotation.x=-.28;scene.add(mesh);
+  document.addEventListener('mousemove',function(e){um.set((e.clientX/innerWidth)*2-1,-(e.clientY/innerHeight)*2+1);mat.uniforms.uM.value=um;});
+  window.addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+}
+function animThree(){requestAnimationFrame(animThree);ut+=.01;if(mesh){mesh.material.uniforms.uT.value=ut;mesh.rotation.z=Math.sin(ut*.08)*.04;}renderer.render(scene,camera);}
+initThree();animThree();
 
-  // ── Digital Clock ──
-  function updateClock() {
-    var now = new Date();
-    var h = String(now.getHours()).padStart(2,'0');
-    var m = String(now.getMinutes()).padStart(2,'0');
-    var s = String(now.getSeconds()).padStart(2,'0');
-    var ms = String(now.getMilliseconds()).padStart(3,'0');
-    document.getElementById('clockTime').childNodes[0].textContent = h+':'+m+':'+s;
-    document.getElementById('clockMs').textContent = '.'+ms;
+/* GLITCH VIDEO CARDS */
+var vccs=document.querySelectorAll('.vcard-canvas'),vctx=[],vct=[];
+vccs.forEach(function(c,i){
+  c.width=c.parentElement.offsetWidth||480;c.height=Math.round(c.width*9/16);
+  vctx.push(c.getContext('2d'));vct.push(Math.random()*200);
+});
+window.addEventListener('resize',function(){vccs.forEach(function(c){c.width=c.parentElement.offsetWidth||480;c.height=Math.round(c.width*9/16);});});
+function drawGlitch(ctx,W,H,seed,t){
+  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  for(var y=0;y<H;y+=4){ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(0,y,W,2);}
+  for(var b=0;b<8+seed;b++){
+    var by=((b/(8+seed)+t*.003*(seed%2===0?1:-1))%1)*H;
+    var ba=.04+Math.abs(Math.sin(t*.04+b*1.8))*.09;
+    ctx.fillStyle='rgba(200,169,110,'+ba+')';ctx.fillRect(0,by,W,2+Math.abs(Math.sin(t*.03+b))*5);
   }
-  setInterval(updateClock, 1);
-  updateClock();
-
-  // ── Generative Art Canvas ──
-  var canvas = document.getElementById('hero-canvas');
-  var ctx = canvas.getContext('2d');
-  function resize(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  for(var p=0;p<22+seed*4;p++){
+    var px=(Math.sin(t*.018+p*.85+seed)*.5+.5)*W;
+    var py=(Math.cos(t*.013+p*1.1+seed*.5)*.5+.5)*H;
+    var pa=.07+Math.abs(Math.sin(t*.022+p*.4))*.22;
+    ctx.beginPath();ctx.arc(px,py,.5+Math.abs(Math.sin(t*.05+p))*1.4,0,Math.PI*2);
+    ctx.fillStyle='rgba(200,169,110,'+pa+')';ctx.fill();
   }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Particle system
-  var PARTICLE_COUNT = 120;
-  var particles = [];
-  for (var i=0; i<PARTICLE_COUNT; i++) {
-    particles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      vx: (Math.random()-.5) * .4,
-      vy: (Math.random()-.5) * .4,
-      r: .5 + Math.random() * 2.5,
-      alpha: .1 + Math.random() * .5,
-      phase: Math.random() * Math.PI * 2,
-      freq: .003 + Math.random() * .008,
-    });
+  for(var l=0;l<4;l++){
+    var lx=(Math.sin(t*.007+l*2.2+seed)*.5+.5)*W;
+    var la=.02+Math.abs(Math.sin(t*.018+l))*.04;
+    ctx.strokeStyle='rgba(200,169,110,'+la+')';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(lx,0);ctx.lineTo(lx,H);ctx.stroke();
   }
+  if(Math.sin(t*.07+seed)>.78){for(var s=0;s<3;s++){var sy=Math.random()*H,sw=1+Math.random()*3,sx=(Math.random()-.5)*10;try{var id=ctx.getImageData(0,sy,W,sw);ctx.putImageData(id,sx,sy);}catch(e){}}}
+}
+(function animVC(){requestAnimationFrame(animVC);vccs.forEach(function(c,i){vct[i]+=.5;drawGlitch(vctx[i],c.width,c.height,parseInt(c.dataset.seed)||1,vct[i]);});})();
 
-  // Mouse interaction
-  var mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-  document.addEventListener('mousemove', function(e){
-    mouse.x = e.clientX; mouse.y = e.clientY;
-  });
-
-  var t = 0;
-  function drawCanvas() {
-    var W = canvas.width, H = canvas.height;
-    ctx.fillStyle = 'rgba(0,0,0,0.18)';
-    ctx.fillRect(0,0,W,H);
-
-    // Connection lines between nearby particles
-    for (var i=0; i<particles.length; i++) {
-      for (var j=i+1; j<particles.length; j++) {
-        var dx = particles[i].x - particles[j].x;
-        var dy = particles[i].y - particles[j].y;
-        var dist = Math.sqrt(dx*dx+dy*dy);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.strokeStyle = 'rgba(200,169,110,'+(0.06*(1-dist/120))+')';
-          ctx.lineWidth = .5;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Draw & update particles
-    particles.forEach(function(p) {
-      // Wave motion
-      var wave = Math.sin(t * p.freq * 100 + p.phase) * 1.2;
-      p.x += p.vx + wave * .1;
-      p.y += p.vy + Math.cos(t * p.freq * 100 + p.phase) * .1;
-
-      // Mouse repulsion
-      var mdx = p.x - mouse.x;
-      var mdy = p.y - mouse.y;
-      var md = Math.sqrt(mdx*mdx + mdy*mdy);
-      if (md < 100) {
-        p.x += mdx/md * 1.5;
-        p.y += mdy/md * 1.5;
-      }
-
-      // Wrap edges
-      if (p.x < 0) p.x = W;
-      if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H;
-      if (p.y > H) p.y = 0;
-
-      // Pulsing alpha
-      var a = p.alpha * (.7 + .3 * Math.sin(t * .02 + p.phase));
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba(200,169,110,'+a+')';
-      ctx.fill();
-    });
-
-    // Central radial glow
-    var grd = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.4);
-    grd.addColorStop(0,'rgba(200,169,110,0.03)');
-    grd.addColorStop(1,'transparent');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0,0,W,H);
-
-    t++;
-    requestAnimationFrame(drawCanvas);
-  }
-  drawCanvas();
-
-  // ── Floating Keywords ──
-  var keywords = [
-    '실행 전문', '모듈형 팀', '70% 비용 절감', '전국 출장',
-    'AI 워크플로우', '압도적 효율', 'B2B 전문',
-    'On-Demand', 'Live Streaming'
-  ];
-  var keywordEls = [];
-
-  function createKeyword(word) {
-    var el = document.createElement('div');
-    el.className = 'keyword';
-    el.textContent = word;
-    el.style.left = (10 + Math.random() * 80) + 'vw';
-    el.style.top  = (10 + Math.random() * 80) + 'vh';
-    el.style.opacity = '0';
-    document.body.appendChild(el);
-
-    var delay = Math.random() * 3000;
-    setTimeout(function(){
-      el.style.opacity = (0.2 + Math.random() * 0.4).toString();
-      setTimeout(function(){
-        el.style.opacity = '0';
-        setTimeout(function(){
-          if (el.parentNode) el.parentNode.removeChild(el);
-          createKeyword(keywords[Math.floor(Math.random()*keywords.length)]);
-        }, 2000);
-      }, 3000 + Math.random() * 4000);
-    }, delay);
-  }
-
-  // Spawn initial keywords with stagger
-  keywords.forEach(function(word, i) {
-    setTimeout(function(){ createKeyword(word); }, i * 400 + 2000);
-  });
-  // Keep spawning
-  setInterval(function(){
-    createKeyword(keywords[Math.floor(Math.random()*keywords.length)]);
-  }, 2500);
-
+/* SCROLL REVEAL */
+var sc=document.getElementById('sc');
+var s2lbl=document.getElementById('s2lbl'),s2ttl=document.getElementById('s2ttl');
+var vcards=document.querySelectorAll('.vcard');
+var revEls=document.querySelectorAll('.reveal');
+sc.addEventListener('scroll',function(){
+  var sy=sc.scrollTop,wh=innerHeight;
+  var s2=document.getElementById('s2');
+  if(s2&&s2.offsetTop-sy<wh*.85){s2lbl.classList.add('in');s2ttl.classList.add('in');vcards.forEach(function(v){v.classList.add('in');});}
+  revEls.forEach(function(el,i){if(el.offsetTop-sy<wh*.85){setTimeout(function(){el.classList.add('visible');},i*80);}});
+});
 })();
 </script>
 </body>

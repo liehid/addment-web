@@ -1,321 +1,111 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ADDMENT — Live Streaming Service</title>
-  <link rel="stylesheet" href="style.css"/>
-  <style>
-    body { overflow-x: hidden; }
-
-    /* ── PAGE HERO ── */
-    #page-hero {
-      min-height: 60vh;
-      display: flex; align-items: flex-end;
-      padding-top: var(--nav-h);
-      position: relative; overflow: hidden;
-      background: var(--black);
-    }
-    .hero-bg-grid {
-      position: absolute; inset: 0;
-      background:
-        linear-gradient(rgba(200,169,110,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(200,169,110,.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-    .hero-bg-grid::after {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 30% 80%, rgba(200,169,110,.06) 0%, transparent 70%);
-    }
-    .live-badge-hero {
-      display: inline-flex; align-items: center; gap: .5rem;
-      font-family: var(--fm); font-size: .6rem;
-      letter-spacing: .2em; color: var(--muted);
-      border: 1px solid var(--border);
-      padding: .4rem 1rem; margin-bottom: 2rem;
-    }
-    .live-dot-red {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #e05c5c; animation: livePulse 1.8s infinite;
-    }
-    @keyframes livePulse {
-      0%,100%{box-shadow:0 0 0 2px rgba(224,92,92,.2);}
-      50%    {box-shadow:0 0 0 7px rgba(224,92,92,0);}
-    }
-    .hero-desc {
-      font-family: var(--fc); font-size: clamp(1.1rem,2.5vw,1.5rem);
-      font-weight: 300; line-height: 1.8;
-      color: rgba(238,234,226,.65);
-      max-width: 600px; margin-top: 1.8rem;
-    }
-
-    /* ── PRICING SECTION ── */
-    #pricing { background: var(--deep); }
-    .pricing-spec-bar {
-      display: flex; flex-wrap: wrap; gap: 0;
-      border: 1px solid var(--border);
-      margin-bottom: 4rem; overflow: hidden;
-    }
-    .spec-item {
-      flex: 1; min-width: 160px;
-      padding: 1.2rem 1.8rem;
-      border-right: 1px solid var(--border);
-    }
-    .spec-item:last-child { border-right: none; }
-    .spec-label {
-      font-family: var(--fm); font-size: .58rem;
-      letter-spacing: .2em; color: var(--muted);
-      text-transform: uppercase; margin-bottom: .4rem; display: block;
-    }
-    .spec-val {
-      font-family: var(--fm); font-size: .78rem;
-      color: var(--white); letter-spacing: .05em;
-    }
-
-    /* ── PRICING GRID ── */
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 2px;
-    }
-    .price-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 3rem 2.5rem;
-      position: relative; overflow: hidden;
-      display: flex; flex-direction: column;
-      transition: background .3s;
-    }
-    .price-card:hover { background: var(--surface2); }
-    .price-card.featured {
-      border-color: rgba(200,169,110,.3);
-      background: linear-gradient(160deg, var(--surface) 50%, rgba(200,169,110,.04) 100%);
-    }
-    .price-card.featured::before {
-      content: 'RECOMMENDED';
-      position: absolute; top: 1.2rem; right: 1.5rem;
-      font-family: var(--fm); font-size: .52rem;
-      letter-spacing: .2em; color: var(--gold);
-      border: 1px solid var(--gold-d);
-      padding: .18rem .55rem;
-    }
-    .price-top { flex: 1; }
-    .price-tier {
-      font-family: var(--fm); font-size: .62rem;
-      letter-spacing: .25em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: 1.5rem; display: block;
-    }
-    .price-amount {
-      font-family: var(--fc); font-weight: 600;
-      font-size: clamp(2rem,4vw,3rem);
-      line-height: 1; margin-bottom: .4rem;
-      letter-spacing: .01em;
-    }
-    .price-amount .won {
-      font-family: var(--fb); font-size: clamp(.8rem,1.5vw,1rem);
-      font-weight: 400; color: var(--muted); margin-left: .2rem;
-    }
-    .price-sub {
-      font-family: var(--fm); font-size: .62rem;
-      letter-spacing: .1em; color: var(--muted);
-      margin-bottom: 2rem; padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .price-features {
-      list-style: none;
-      display: flex; flex-direction: column; gap: .85rem;
-      margin-bottom: 2.5rem;
-    }
-    .price-features li {
-      display: flex; align-items: flex-start; gap: .8rem;
-      font-size: .83rem; line-height: 1.5;
-      color: rgba(238,234,226,.7);
-    }
-    .price-features li::before {
-      content: '—'; color: var(--gold-d);
-      font-family: var(--fm); flex-shrink: 0;
-    }
-    .price-features li strong { color: var(--white); font-weight: 500; }
-    /* 버튼 항상 하단 고정 */
-    .price-cta {
-      display: block; width: 100%;
-      padding: .9rem 1.5rem; text-align: center;
-      border: 1px solid var(--gold-d); color: var(--gold);
-      font-family: var(--fm); font-size: .68rem;
-      letter-spacing: .2em; text-transform: uppercase;
-      text-decoration: none;
-      transition: all .3s;
-      position: relative; overflow: hidden; z-index: 0;
-      margin-top: auto;
-    }
-    .price-cta::before {
-      content: ''; position: absolute; inset: 0;
-      background: var(--gold); transform: scaleX(0);
-      transform-origin: left; transition: transform .35s; z-index: -1;
-    }
-    .price-cta:hover { color: var(--black); border-color: var(--gold); }
-    .price-cta:hover::before { transform: scaleX(1); }
-
-    /* ── HOW IT WORKS ── */
-    #how { background: var(--black); border-top: 1px solid var(--border); }
-    .steps-grid {
-      display: grid; grid-template-columns: repeat(4,1fr);
-      gap: 2px; margin-top: 4rem;
-    }
-    .step-card {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 2.5rem 2rem;
-    }
-    .step-num {
-      font-family: var(--fm); font-size: .62rem;
-      color: var(--gold-d); letter-spacing: .1em;
-      margin-bottom: 1.5rem; display: block;
-    }
-    .step-title {
-      font-family: var(--fh); font-weight: 700;
-      font-size: 1rem; margin-bottom: .8rem;
-    }
-    .step-desc {
-      font-size: .82rem; line-height: 1.75;
-      color: var(--muted);
-    }
-
-    @media (max-width: 1024px) {
-      .pricing-grid { grid-template-columns: 1fr; max-width: 460px; margin: 0 auto; }
-      .steps-grid { grid-template-columns: repeat(2,1fr); }
-    }
-    @media (max-width: 768px) {
-      .steps-grid { grid-template-columns: 1fr; }
-      .pricing-spec-bar { flex-direction: column; }
-      .spec-item { border-right: none; border-bottom: 1px solid var(--border); }
-    }
-  </style>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ADDMENT — Live Streaming Service</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+#page-hero{background:var(--black)}
+.live-dot-red{width:6px;height:6px;border-radius:50%;background:#e05c5c;animation:livePulse 1.8s infinite}
+.live-badge-hero{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--fm);font-size:.6rem;letter-spacing:.2em;color:var(--muted);border:1px solid var(--border);padding:.4rem 1rem;margin-bottom:2rem}
+.pricing-spec-bar{display:flex;flex-wrap:wrap;border:1px solid var(--border);margin-bottom:3.5rem;overflow:hidden}
+.spec-item{flex:1;min-width:150px;padding:1.2rem 1.8rem;border-right:1px solid var(--border)}
+.spec-item:last-child{border-right:none}
+.spec-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:.4rem;display:block}
+.spec-val{font-family:var(--fm);font-size:.78rem;color:var(--white)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:3.5rem}
+.step-card{background:var(--surface);border:1px solid var(--border);padding:2.5rem 2rem}
+.step-num{font-family:var(--fm);font-size:.6rem;color:var(--gold-d);letter-spacing:.1em;margin-bottom:1.2rem;display:block}
+.step-title{font-family:var(--fh);font-weight:700;font-size:.95rem;margin-bottom:.7rem}
+.step-desc{font-size:.8rem;line-height:1.75;color:var(--muted)}
+@media(max-width:768px){.pricing-spec-bar{flex-direction:column}.spec-item{border-right:none;border-bottom:1px solid var(--border)}.steps-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.steps-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-
-<!-- NAV -->
 <nav id="nav" class="scrolled">
   <a href="index.html" class="nav-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="30" width="auto">
-      <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="#FFFFFF">ADDMENT</text>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="32" width="auto">
+      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="#ffffff" letter-spacing="2">ADDMENT</text>
     </svg>
     <span class="nav-tag">// Module Team</span>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="live.html" class="active">Live</a></li>
-    <li><a href="youtube.html">YouTube</a></li>
-    <li><a href="wedding.html">Wedding</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a href="index.html">Home</a></li><li><a href="live.html" class="active">Live</a></li>
+    <li><a href="youtube.html">YouTube</a></li><li><a href="wedding.html">Wedding</a></li>
+    <li><a href="about.html">About</a></li><li><a href="contact.html">Contact</a></li>
   </ul>
   <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
-  <a href="index.html">Home</a>
-  <a href="live.html" class="active">Live</a>
-  <a href="youtube.html">YouTube</a>
-  <a href="wedding.html">Wedding</a>
-  <a href="about.html">About</a>
-  <a href="contact.html">Contact</a>
+  <a href="index.html">Home</a><a href="live.html" class="active">Live</a>
+  <a href="youtube.html">YouTube</a><a href="wedding.html">Wedding</a>
+  <a href="about.html">About</a><a href="contact.html">Contact</a>
 </div>
 
-<!-- PAGE HERO -->
-<section id="page-hero">
+<!-- HERO -->
+<div class="page-hero" id="page-hero">
   <div class="hero-bg-grid"></div>
   <div class="page-hero-inner">
     <div class="live-badge-hero reveal"><div class="live-dot-red"></div>MAIN MODULE</div>
     <span class="page-hero-label reveal">// Live Streaming Service</span>
-    <h1 class="page-hero-title reveal">
-      <span class="ko">출장 라이브</span>
-      <em>스트리밍</em>
-    </h1>
-    <p class="hero-desc reveal">
-      현장의 감동을 전 세계로.<br/>
-      기업 행사, 컨퍼런스, 라이브 커머스 전문 송출 모듈입니다.
-    </p>
+    <h1 class="page-hero-title reveal"><span class="ko">출장 라이브</span> <em>스트리밍</em></h1>
+    <p class="page-hero-sub reveal">현장의 감동을 전 세계로.<br/>기업 행사, 컨퍼런스, 라이브 커머스 전문 송출 모듈입니다.</p>
     <div class="page-hero-line"></div>
   </div>
-</section>
+</div>
 
 <!-- PRICING -->
-<section id="pricing">
+<section style="background:var(--deep)">
   <div class="container">
     <span class="sec-label reveal">// Pricing</span>
     <h2 class="sec-title reveal">출장 라이브 스트리밍 <em>가격표</em></h2>
-
-    <div class="pricing-spec-bar reveal">
-      <div class="spec-item">
-        <span class="spec-label">촬영 시간</span>
-        <span class="spec-val">60분</span>
-      </div>
-      <div class="spec-item">
-        <span class="spec-label">작업일</span>
-        <span class="spec-val">1일</span>
-      </div>
-      <div class="spec-item">
-        <span class="spec-label">수정 횟수</span>
-        <span class="spec-val">0회</span>
-      </div>
-      <div class="spec-item">
-        <span class="spec-label">인도 방식</span>
-        <span class="spec-val">현장 송출 완료 후 즉시 인도</span>
-      </div>
+    <div class="pricing-spec-bar reveal" style="margin-top:2.5rem">
+      <div class="spec-item"><span class="spec-label">촬영 시간</span><span class="spec-val">60분</span></div>
+      <div class="spec-item"><span class="spec-label">작업일</span><span class="spec-val">1일</span></div>
+      <div class="spec-item"><span class="spec-label">수정 횟수</span><span class="spec-val">0회</span></div>
+      <div class="spec-item"><span class="spec-label">인도 방식</span><span class="spec-val">현장 송출 완료 후 즉시 인도</span></div>
     </div>
-
     <div class="pricing-grid">
-      <!-- STANDARD -->
       <div class="price-card reveal">
         <div class="price-top">
           <span class="price-tier">Standard</span>
           <div class="price-amount">220,000<span class="won">원</span></div>
           <div class="price-sub">단일 카메라 · 기본 송출</div>
           <ul class="price-features">
-            <li><strong>카메라 1대</strong></li>
-            <li>마이크 2대</li>
-            <li>송출 장비 일체</li>
-            <li>조명</li>
-            <li>송출 감독 1명</li>
-            <li>전체화면 샷 지원</li>
+            <li><strong>카메라 1대</strong></li><li>마이크 2대</li>
+            <li>송출 장비 일체</li><li>조명</li>
+            <li>송출 감독 1명</li><li>전체화면 샷 지원</li>
           </ul>
         </div>
         <a href="contact.html" class="price-cta">문의하기</a>
       </div>
-
-      <!-- DELUXE -->
       <div class="price-card featured reveal">
         <div class="price-top">
           <span class="price-tier">Deluxe</span>
           <div class="price-amount">275,000<span class="won">원</span></div>
           <div class="price-sub">듀얼 카메라 · 지정 샷 추가</div>
           <ul class="price-features">
-            <li><strong>카메라 2대</strong></li>
-            <li>마이크 2대</li>
-            <li>송출 장비 일체</li>
-            <li>조명</li>
-            <li>송출 감독 1명</li>
-            <li>전체화면 샷 지원</li>
+            <li><strong>카메라 2대</strong></li><li>마이크 2대</li>
+            <li>송출 장비 일체</li><li>조명</li>
+            <li>송출 감독 1명</li><li>전체화면 샷 지원</li>
             <li><strong>지정 샷 1개 추가</strong></li>
           </ul>
         </div>
         <a href="contact.html" class="price-cta">문의하기</a>
       </div>
-
-      <!-- PREMIUM -->
       <div class="price-card reveal">
         <div class="price-top">
           <span class="price-tier">Premium</span>
           <div class="price-amount">330,000<span class="won">원</span></div>
           <div class="price-sub">트리플 카메라 · 멀티 샷 구성</div>
           <ul class="price-features">
-            <li><strong>카메라 3대</strong></li>
-            <li>마이크 2대</li>
-            <li>송출 장비 일체</li>
-            <li>조명</li>
-            <li>송출 감독 1명</li>
-            <li>전체화면 샷 지원</li>
+            <li><strong>카메라 3대</strong></li><li>마이크 2대</li>
+            <li>송출 장비 일체</li><li>조명</li>
+            <li>송출 감독 1명</li><li>전체화면 샷 지원</li>
             <li><strong>지정 샷 2개 추가</strong></li>
           </ul>
         </div>
@@ -325,53 +115,60 @@
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how">
+<!-- SELECTED WORKS -->
+<div class="works-section">
+  <div class="container">
+    <span class="sec-label reveal">// Selected Works</span>
+    <h2 class="sec-title reveal">라이브 <em>레퍼런스</em></h2>
+    <div class="works-grid reveal">
+      <div class="works-card"><canvas class="works-canvas" data-seed="11"></canvas><span class="works-label">// Live · Conference 01</span></div>
+      <div class="works-card"><canvas class="works-canvas" data-seed="12"></canvas><span class="works-label">// Live · Commerce 01</span></div>
+      <div class="works-card"><canvas class="works-canvas" data-seed="13"></canvas><span class="works-label">// Live · Seminar 01</span></div>
+    </div>
+    <p class="works-note reveal">// 포트폴리오 영상은 문의 후 제공됩니다 · 추후 유튜브 링크로 교체 예정</p>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<section style="background:var(--black);border-top:1px solid var(--border)">
   <div class="container">
     <span class="sec-label reveal">// How It Works</span>
     <h2 class="sec-title reveal">진행 <em>프로세스</em></h2>
     <div class="steps-grid">
-      <div class="step-card reveal">
-        <span class="step-num">01</span>
-        <div class="step-title">기획안 공유</div>
-        <div class="step-desc">행사 목적, 장소, 플랫폼, 예상 시간을 알려주세요.</div>
-      </div>
-      <div class="step-card reveal">
-        <span class="step-num">02</span>
-        <div class="step-title">패키지 선택</div>
-        <div class="step-desc">카메라 대수와 샷 구성에 맞는 패키지를 선택합니다.</div>
-      </div>
-      <div class="step-card reveal">
-        <span class="step-num">03</span>
-        <div class="step-title">현장 송출</div>
-        <div class="step-desc">ADDMENT 팀이 현장에서 전문 장비로 실시간 송출합니다.</div>
-      </div>
-      <div class="step-card reveal">
-        <span class="step-num">04</span>
-        <div class="step-title">즉시 완료</div>
-        <div class="step-desc">송출 종료 후 별도 후처리 없이 즉시 인도됩니다.</div>
-      </div>
+      <div class="step-card reveal"><span class="step-num">01</span><div class="step-title">기획안 공유</div><div class="step-desc">행사 목적, 장소, 플랫폼, 예상 시간을 알려주세요.</div></div>
+      <div class="step-card reveal"><span class="step-num">02</span><div class="step-title">패키지 선택</div><div class="step-desc">카메라 대수와 샷 구성에 맞는 패키지를 선택합니다.</div></div>
+      <div class="step-card reveal"><span class="step-num">03</span><div class="step-title">현장 송출</div><div class="step-desc">ADDMENT 팀이 현장에서 전문 장비로 실시간 송출합니다.</div></div>
+      <div class="step-card reveal"><span class="step-num">04</span><div class="step-title">즉시 완료</div><div class="step-desc">송출 종료 후 별도 후처리 없이 즉시 인도됩니다.</div></div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 36" height="22" width="auto">
-    <text x="0" y="28" font-family="Syne,sans-serif" font-weight="800" font-size="28" letter-spacing="4" fill="rgba(255,255,255,0.5)">ADDMENT</text>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="22" width="auto">
+    <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="rgba(255,255,255,0.38)" letter-spacing="2">ADDMENT</text>
   </svg>
   <div class="footer-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
 </footer>
-
 <script>
 (function(){
-  var cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-  var mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-  (function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
-  document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
-  var io=new IntersectionObserver(function(entries){entries.forEach(function(e,i){if(e.isIntersecting){setTimeout(function(){e.target.classList.add('visible');},i*80);io.unobserve(e.target);}});},{threshold:.08});
-  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+var mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+(function tick(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',scrollY>40);});
+document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
+var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+// Works glitch
+var wcs=document.querySelectorAll('.works-canvas'),wctx=[],wt=[];
+wcs.forEach(function(c){c.width=c.parentElement.offsetWidth||400;c.height=Math.round(c.width*9/16);wctx.push(c.getContext('2d'));wt.push(Math.random()*100);});
+function wg(ctx,W,H,seed,t){
+  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  for(var y=0;y<H;y+=4){ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,y,W,2);}
+  for(var b=0;b<7+seed%4;b++){var by=((b/(7+seed%4)+t*.003*(seed%2===0?1:-1))%1)*H;var ba=.04+Math.abs(Math.sin(t*.04+b*1.8))*.08;ctx.fillStyle='rgba(200,169,110,'+ba+')';ctx.fillRect(0,by,W,2+Math.abs(Math.sin(t*.03+b))*4);}
+  for(var p=0;p<18+seed*2;p++){var px=(Math.sin(t*.016+p*.8+seed)*.5+.5)*W;var py=(Math.cos(t*.012+p*1.1+seed*.4)*.5+.5)*H;var pa=.06+Math.abs(Math.sin(t*.02+p*.4))*.18;ctx.beginPath();ctx.arc(px,py,.5+Math.abs(Math.sin(t*.05+p))*1.2,0,Math.PI*2);ctx.fillStyle='rgba(200,169,110,'+pa+')';ctx.fill();}
+}
+(function anim(){requestAnimationFrame(anim);wcs.forEach(function(c,i){wt[i]+=.4;wg(wctx[i],c.width,c.height,parseInt(c.dataset.seed)||11,wt[i]);});})();
 })();
 </script>
 </body>
