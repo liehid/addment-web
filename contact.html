@@ -36,6 +36,10 @@
 .cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
 @media(max-width:1024px){.contact-grid{grid-template-columns:1fr;gap:4rem}}
 @media(max-width:600px){.service-links{grid-template-columns:1fr}}
+
+/* reveal 애니메이션 — style.css 누락 대비 */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
 </style>
 </head>
 <body>
