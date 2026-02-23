@@ -1,332 +1,671 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ADDMENT — 모듈형 영상 제작팀</title>
-<link rel="stylesheet" href="style.css"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ADDMENT</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@300&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 <style>
-html,body{overflow:hidden;height:100vh}
-#three-canvas{position:fixed;inset:0;z-index:0;width:100%;height:100%}
-/* NAV override for home */
-nav{opacity:0;animation:fadeIn .8s .5s forwards}
-/* LIVE BADGE */
-.live-badge{position:fixed;top:calc(var(--nav-h) + 1.2rem);right:4rem;display:flex;align-items:center;gap:.5rem;font-family:var(--fm);font-size:.58rem;letter-spacing:.15em;color:var(--muted);z-index:50;opacity:0;animation:fadeIn .8s 1.2s forwards}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#e05c5c;animation:livePulse 1.8s infinite}
-/* CLOCK */
-.clock-wrap{position:fixed;bottom:2.8rem;right:4rem;z-index:50;text-align:right;opacity:0;animation:fadeIn .8s 1.4s forwards}
-.clock-label{font-family:var(--fm);font-size:.5rem;letter-spacing:.25em;color:rgba(200,169,110,.3);text-transform:uppercase;margin-bottom:.2rem;display:block}
-.clock-time{font-family:var(--fm);font-size:.88rem;color:rgba(200,169,110,.55);letter-spacing:.06em;font-weight:300}
-.clock-ms{font-size:.54rem;color:rgba(200,169,110,.3)}
-/* SOUND */
-.sound-toggle{position:fixed;bottom:2.8rem;left:4rem;z-index:50;display:flex;align-items:center;gap:.55rem;cursor:pointer;opacity:0;animation:fadeIn .8s 1.6s forwards;background:none;border:1px solid rgba(200,169,110,.08);padding:.4rem .9rem;transition:border-color .3s}
-.sound-toggle:hover{border-color:rgba(200,169,110,.25)}
-.sound-icon svg{width:15px;height:15px;display:block}
-.sound-label{font-family:var(--fm);font-size:.52rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
-/* SCROLL CONTAINER */
-#sc{position:fixed;inset:0;z-index:10;overflow-y:scroll;overflow-x:hidden;scroll-snap-type:y mandatory}
-#sc::-webkit-scrollbar{display:none}
-/* S1 */
-#s1{height:100vh;scroll-snap-align:start;display:flex;align-items:flex-end;padding:0 4rem 3.5rem;position:relative}
-.s1-foot{display:flex;align-items:flex-end;justify-content:space-between;width:100%;opacity:0;animation:fadeIn .9s 1s forwards}
-.s1-tag{font-family:var(--fm);font-size:.56rem;letter-spacing:.28em;color:rgba(200,169,110,.35);text-transform:uppercase;line-height:2.4}
-.s1-hint{display:flex;flex-direction:column;align-items:center;gap:.5rem}
-.s1-hint span{font-family:var(--fm);font-size:.52rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
-.s1-bar{width:1px;height:42px;background:linear-gradient(to bottom,rgba(200,169,110,.5),transparent);animation:scrollPulse 2s infinite}
-/* S2 - CARDS */
-#s2{min-height:100vh;scroll-snap-align:start;padding:calc(var(--nav-h) + 3.5rem) 4rem 5rem;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,.7) 0%,rgba(0,0,0,.95) 30%)}
-.s2-label{font-family:var(--fm);font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:0;transform:translateY(20px);transition:all .7s}
-.s2-title{font-family:var(--fh);font-weight:700;font-size:clamp(1.8rem,4vw,3rem);margin-bottom:3rem;opacity:0;transform:translateY(20px);transition:all .7s .1s}
-.s2-title em{font-style:normal;color:var(--gold)}
-.s2-label.in,.s2-title.in{opacity:1;transform:none}
-.vcards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-.vcard{position:relative;aspect-ratio:16/9;overflow:hidden;display:block;text-decoration:none;background:#000;opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
-.vcard.in{opacity:1;transform:none}
-.vcard:nth-child(1){transition-delay:.1s}.vcard:nth-child(2){transition-delay:.22s}.vcard:nth-child(3){transition-delay:.34s}
-.vcard-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.vcard-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.05) 70%,transparent 100%);transition:opacity .4s}
-.vcard:hover .vcard-overlay{opacity:.5}
-.vcard-content{position:absolute;bottom:0;left:0;right:0;padding:1.5rem 1.8rem;z-index:2;transform:translateY(5px);transition:transform .4s}
-.vcard:hover .vcard-content{transform:none}
-.vcard-tag{font-family:var(--fm);font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;display:block}
-.vcard-name{font-family:var(--fh);font-weight:700;font-size:1.15rem;color:var(--white);margin-bottom:.2rem}
-.vcard-ko{font-family:var(--fb);font-size:.72rem;color:rgba(238,234,226,.4)}
-.vcard-arrow{position:absolute;top:1.2rem;right:1.5rem;width:30px;height:30px;border:1px solid rgba(200,169,110,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.75rem;opacity:0;transform:scale(.8);transition:all .4s}
-.vcard:hover .vcard-arrow{opacity:1;transform:scale(1)}
-.vcard::before{content:'';position:absolute;inset:0;z-index:1;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none}
-/* S3 - STATEMENT */
-#s3{min-height:65vh;scroll-snap-align:start;display:flex;align-items:center;padding:5rem 4rem;border-top:1px solid rgba(200,169,110,.07);position:relative;z-index:1;background:rgba(0,0,0,.96)}
-.brand-stmt{max-width:860px;font-family:var(--fh);font-weight:700;font-size:clamp(1.8rem,4.5vw,3.5rem);line-height:1.12;letter-spacing:-.02em}
-.brand-stmt .ko{font-family:var(--fb);font-weight:700}
-.brand-stmt em{font-style:normal;color:var(--gold)}
-.brand-stmt .dim{color:rgba(238,234,226,.25)}
-.brand-cta{margin-top:3rem;display:flex;gap:1rem;flex-wrap:wrap}
-/* FOOTER on home */
-#s-foot{scroll-snap-align:start;padding:2rem 4rem;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(200,169,110,.08);position:relative;z-index:1;background:#000}
-.foot-copy{font-family:var(--fm);font-size:.58rem;letter-spacing:.08em;color:var(--muted)}
-@media(max-width:768px){
-  #s1,#s2,#s3,#s-foot{padding-left:1.5rem;padding-right:1.5rem}
-  .vcards{grid-template-columns:1fr}.live-badge{right:1.5rem}
-  .clock-wrap{right:1.5rem;bottom:5rem}.sound-toggle{left:1.5rem;bottom:5rem}
-  .nav-links{display:none}.nav-hamburger{display:flex}nav{padding:0 1.5rem}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
+
+/* Three.js 캔버스 */
+#three-c{position:fixed;inset:0;z-index:0}
+
+/* 커서 */
+#cur{position:fixed;pointer-events:none;z-index:999;mix-blend-mode:difference}
+#cur-dot{width:8px;height:8px;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}
+#cur-ring{position:fixed;pointer-events:none;z-index:998;width:36px;height:36px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.22);transform:translate(-50%,-50%)}
+
+/* UI */
+.ui{position:fixed;inset:0;z-index:10;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:space-between;padding:2.8rem 3.5rem}
+.logo{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:.65rem;
+  letter-spacing:.45em;text-transform:uppercase;color:rgba(255,255,255,.22);
+  opacity:0;animation:appear 2s 1.2s ease forwards}
+.bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.scroll-hint{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:.46rem;
+  letter-spacing:.4em;color:rgba(255,255,255,.14);text-transform:uppercase;
+  writing-mode:vertical-rl;opacity:0;animation:appear 2s 3.5s ease forwards}
+.corner-text{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
+  font-size:.9rem;color:rgba(255,255,255,.1);letter-spacing:.06em;
+  opacity:0;animation:appear 2s 3.8s ease forwards;text-align:right;line-height:1.6}
+.subtitle{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:.52rem;
+  letter-spacing:.55em;text-transform:uppercase;color:rgba(255,255,255,.22);
+  opacity:0;animation:subReveal 3s 3s ease forwards;text-align:center;
+  position:absolute;left:50%;top:50%;transform:translate(-50%,2.5rem)}
+
+/* 스크롤 드라이버 */
+#sw{position:fixed;inset:0;z-index:5;overflow-y:scroll;
+  scrollbar-width:none;-ms-overflow-style:none}
+#sw::-webkit-scrollbar{display:none}
+#st{height:800vh;width:1px;pointer-events:none}
+
+/* Glass Cards */
+.gcard{
+  position:fixed;width:min(56vw,820px);aspect-ratio:16/9;
+  left:50%;top:50%;
+  transform:translateX(-50%) translateY(calc(-50% + 80px));
+  opacity:0;z-index:20;pointer-events:none;
+  transition:transform 1.0s cubic-bezier(.16,1,.3,1),opacity .8s ease;
+  background:rgba(255,255,255,.004);
+  backdrop-filter:blur(4px) saturate(110%);
+  -webkit-backdrop-filter:blur(4px) saturate(110%);
+  border:1px solid rgba(255,255,255,.04);border-radius:2px;
+  box-shadow:0 1px 0 rgba(255,255,255,.08),0 20px 40px rgba(0,0,0,.2),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  text-decoration:none;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end}
+.gcard.enter{transform:translateX(-50%) translateY(-50%);opacity:1;pointer-events:auto}
+.gcard.exit{transform:translateX(-50%) translateY(calc(-50% - 80px));opacity:0;pointer-events:none}
+.gcard::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(155deg,rgba(255,255,255,.02) 0%,transparent 70%)}
+.gcard::after{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,.4),transparent)}
+.gc-body{position:relative;z-index:2;padding:1.8rem 2.4rem;
+  background:linear-gradient(to top,rgba(0,0,0,.45) 0%,rgba(0,0,0,.04) 50%,transparent)}
+.gc-label{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:.52rem;
+  letter-spacing:.28em;text-transform:uppercase;color:rgba(180,210,200,.55);
+  margin-bottom:.45rem;display:block}
+.gc-name{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;
+  font-size:1.55rem;color:rgba(242,238,228,.92);margin-bottom:.2rem}
+.gc-sub{font-family:'IBM Plex Mono',monospace;font-weight:300;font-size:.6rem;
+  color:rgba(255,255,255,.22)}
+.gc-arr{position:absolute;top:1.5rem;right:2rem;font-size:.65rem;
+  color:rgba(180,210,200,.28);transition:all .3s;font-family:'IBM Plex Mono',monospace}
+.gcard:hover .gc-arr{color:rgba(180,210,200,.75);transform:translate(2px,-2px)}
+
+@keyframes appear{from{opacity:0}to{opacity:1}}
+@keyframes subReveal{from{color:rgba(255,255,255,0)}to{color:rgba(255,255,255,.22)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:768px){.gcard{width:min(90vw,460px)}}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;height:70px;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4rem;pointer-events:auto;
+  opacity:0;animation:fadeIn .8s .4s forwards;
+}
+.nav-logo{
+  display:flex;align-items:center;gap:.7rem;text-decoration:none;
+}
+.nav-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:.52rem;
+  color:rgba(200,169,110,.3);letter-spacing:.12em;
+}
+.nav-links{display:flex;list-style:none;}
+.nav-links a{
+  color:rgba(200,169,110,.35);text-decoration:none;
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  padding:.5rem 1.2rem;transition:color .3s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:0;left:1.2rem;right:1.2rem;
+  height:1px;background:rgba(200,169,110,.6);
+  transform:scaleX(0);transition:transform .3s;transform-origin:left;
+}
+.nav-links a:hover{color:rgba(200,169,110,.9);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem;}
+.hbg span{width:22px;height:1px;background:rgba(200,169,110,.5);display:block;}
+
+/* ── CLOCK ── */
+#clock-wrap{
+  position:fixed;
+  /* 초기: 화면 중앙 하단 1/3 지점 */
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  z-index:15;pointer-events:none;
+  text-align:center;
+  opacity:0;
+  animation:fadeIn 0.8s 0s ease forwards;
+  will-change:transform;
+}
+.clock-lbl{
+  font-family:'IBM Plex Mono',monospace;font-weight:300;
+  font-size:.48rem;letter-spacing:.25em;
+  color:rgba(200,169,110,.28);text-transform:uppercase;
+  margin-bottom:.4rem;display:block;
+  transition:opacity .4s;
+}
+#ct{
+  font-family:'IBM Plex Mono',monospace;font-weight:300;
+  font-size:4.2rem;
+  color:rgba(200,169,110,.5);
+  letter-spacing:.06em;line-height:1;
+  white-space:nowrap;
+  will-change:font-size,color;
+}
+.clock-ms{
+  font-size:.52em;
+  color:rgba(200,169,110,.28);
 }
 </style>
 </head>
 <body>
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<canvas id="three-canvas"></canvas>
-<audio id="bgm" src="assets/bgm.mp3" loop preload="none"></audio>
 
-<nav id="nav">
+<canvas id="three-c"></canvas>
+
+<div id="cur"><div id="cur-dot"></div></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
   <a href="index.html" class="nav-logo">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="32" width="auto">
-      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="#ffffff" letter-spacing="2">ADDMENT</text>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="28" width="auto">
+      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="rgba(255,255,255,0.85)" letter-spacing="2">ADDMENT</text>
     </svg>
     <span class="nav-tag">// Module Team</span>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html" class="active">Home</a></li>
-    <li><a href="live.html">Live</a></li>
-    <li><a href="youtube.html">YouTube</a></li>
-    <li><a href="wedding.html">Wedding</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
+    <li><a href="#" class="active">Home</a></li>
+    <li><a href="#">Live</a></li>
+    <li><a href="#">YouTube</a></li>
+    <li><a href="#">Wedding</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
   </ul>
-  <div class="nav-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  <div class="hbg" id="hbg"><span></span><span></span><span></span></div>
 </nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="index.html" class="active">Home</a><a href="live.html">Live</a>
-  <a href="youtube.html">YouTube</a><a href="wedding.html">Wedding</a>
-  <a href="about.html">About</a><a href="contact.html">Contact</a>
+
+<!-- DIGITAL CLOCK — 중앙 시작, 스크롤 시 우상단으로 이동 -->
+<div id="clock-wrap">
+  <span class="clock-lbl">// Live Sync</span>
+  <div id="ct">00:00:00<span class="clock-ms" id="cms">.000</span></div>
 </div>
 
-<div class="live-badge"><div class="live-dot"></div>ON-DEMAND PRODUCTION</div>
-<div class="clock-wrap">
-  <span class="clock-label">// Live Sync</span>
-  <div class="clock-time" id="ct">00:00:00<span class="clock-ms" id="cms">.000</span></div>
-</div>
-<button class="sound-toggle" id="sndBtn">
-  <span class="sound-icon">
-    <svg viewBox="0 0 20 20" fill="none" stroke="rgba(200,169,110,.5)" stroke-width="1.2" stroke-linecap="round">
-      <path d="M3 7H7L12 3V17L7 13H3V7Z"/>
-      <path id="sw1" d="M15 7C16.5 8 16.5 12 15 13"/>
-      <path id="sw2" d="M17 5C19.5 7 19.5 13 17 15"/>
-    </svg>
-  </span>
-  <span class="sound-label" id="sndLbl">Sound Off</span>
-</button>
-
-<div id="sc">
-  <!-- S1: PURE VISUAL -->
-  <section id="s1">
-    <div class="s1-foot">
-      <div class="s1-tag">귀사의 기획에 기술적인 움직임을 더합니다<br/>Modular · On-Demand · B2B</div>
-      <div class="s1-hint"><div class="s1-bar"></div><span>Scroll</span></div>
-    </div>
-  </section>
-
-  <!-- S2: GLITCH VIDEO CARDS -->
-  <section id="s2">
-    <div class="s2-label" id="s2lbl">// Selected Works &amp; Services</div>
-    <div class="s2-title" id="s2ttl"><em>서비스</em> 모듈</div>
-    <div class="vcards">
-      <a class="vcard" href="live.html">
-        <canvas class="vcard-canvas" data-seed="1"></canvas>
-        <div class="vcard-overlay"></div><div class="vcard-arrow">↗</div>
-        <div class="vcard-content">
-          <span class="vcard-tag">Main Module · Live</span>
-          <div class="vcard-name">Live Streaming</div>
-          <div class="vcard-ko">출장 라이브 스트리밍</div>
-        </div>
-      </a>
-      <a class="vcard" href="youtube.html">
-        <canvas class="vcard-canvas" data-seed="2"></canvas>
-        <div class="vcard-overlay"></div><div class="vcard-arrow">↗</div>
-        <div class="vcard-content">
-          <span class="vcard-tag">Module · YouTube</span>
-          <div class="vcard-name">YouTube Content</div>
-          <div class="vcard-ko">유튜브 콘텐츠 제작</div>
-        </div>
-      </a>
-      <a class="vcard" href="wedding.html">
-        <canvas class="vcard-canvas" data-seed="3"></canvas>
-        <div class="vcard-overlay"></div><div class="vcard-arrow">↗</div>
-        <div class="vcard-content">
-          <span class="vcard-tag">Specialty · Personal</span>
-          <div class="vcard-name">Wedding Archive</div>
-          <div class="vcard-ko">웨딩 아카이브</div>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- S3: BRAND STATEMENT -->
-  <section id="s3">
-    <div>
-      <p class="brand-stmt reveal">
-        <span class="ko">기획은 클라이언트가,</span><br/>
-        실행은 <em>ADDMENT</em>가.<br/>
-        <span class="dim">우리는 화려한 기획서 대신<br/>완벽한 실행으로 증명합니다.</span>
-      </p>
-      <div class="brand-cta reveal">
-        <a href="live.html" class="btn-primary">서비스 보기 →</a>
-        <a href="contact.html" class="btn-outline">문의하기</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <div id="s-foot">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="22" width="auto">
-      <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="rgba(255,255,255,0.38)" letter-spacing="2">ADDMENT</text>
-    </svg>
-    <div class="foot-copy">© 2025 ADDMENT. Modular Video Production Team.</div>
+<!-- 기존 UI (scroll hint, corner text 유지) -->
+<div class="ui">
+  <div class="logo" style="opacity:0;pointer-events:none">·</div>
+  <div class="subtitle">Live · YouTube · Wedding · Archive</div>
+  <div class="bottom">
+    <div class="scroll-hint" id="hint">Scroll to explore</div>
+    <div class="corner-text">모듈형 영상 제작팀<br>서울 · 2024</div>
   </div>
 </div>
+
+<div id="sw"><div id="st"></div></div>
+
+<a class="gcard" href="#" id="gc1">
+  <div class="gc-arr">↗</div>
+  <div class="gc-body">
+    <span class="gc-label">// Main Module · Live</span>
+    <div class="gc-name">Live Streaming</div>
+    <div class="gc-sub">출장 라이브 스트리밍 · 220,000원~</div>
+  </div>
+</a>
+<a class="gcard" href="#" id="gc2">
+  <div class="gc-arr">↗</div>
+  <div class="gc-body">
+    <span class="gc-label">// Module · YouTube</span>
+    <div class="gc-name">YouTube Content</div>
+    <div class="gc-sub">유튜브 콘텐츠 제작 · 150,000원~</div>
+  </div>
+</a>
+<a class="gcard" href="#" id="gc3">
+  <div class="gc-arr">↗</div>
+  <div class="gc-body">
+    <span class="gc-label">// Specialty · Wedding</span>
+    <div class="gc-name">Wedding Archive</div>
+    <div class="gc-sub">웨딩 아카이브 · 880,000원~</div>
+  </div>
+</a>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
-/* CURSOR */
-var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
-var mx=0,my=0,rx=0,ry=0;
+'use strict';
+
+/* ══════════════════════════════════════════════════
+   THREE.JS FLOW FIELD
+   - Points 시스템: 수천 개의 3D 파티클
+   - group.rotation.y: 스크롤에 따라 Y축 회전
+   - camera.position.z: 스크롤에 따라 Z축 전진
+   - lerp으로 모든 값 부드럽게 보간
+   ══════════════════════════════════════════════════ */
+
+/* ── 커서 ── */
+var curDot=document.getElementById('cur');
+var curRing=document.getElementById('cur-ring');
+var mx=innerWidth/2, my=innerHeight/2, rx=mx, ry=my;
 document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-(function tick(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+(function cl(){
+  curDot.style.left=mx+'px';curDot.style.top=my+'px';
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  curRing.style.left=rx+'px';curRing.style.top=ry+'px';
+  requestAnimationFrame(cl);
+})();
 
-/* NAV */
-document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('mobileMenu').classList.toggle('open');});
+/* ── THREE 기본 설정 ── */
+var W=innerWidth, H=innerHeight;
+var renderer=new THREE.WebGLRenderer({
+  canvas:document.getElementById('three-c'),
+  antialias:true, alpha:false
+});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(W,H);
+renderer.setClearColor(0x020306,1);
 
-/* CLOCK */
-setInterval(function(){
+var scene=new THREE.Scene();
+scene.fog=new THREE.FogExp2(0x020306,0.0012);
+
+var camera=new THREE.PerspectiveCamera(65,W/H,.1,3000);
+camera.position.set(0,0,600);
+
+window.addEventListener('resize',function(){
+  W=innerWidth;H=innerHeight;
+  renderer.setSize(W,H);
+  camera.aspect=W/H;
+  camera.updateProjectionMatrix();
+});
+
+/* ── 파티클 그룹 ── */
+var group=new THREE.Group();
+scene.add(group);
+
+/* ── Perlin Noise (간단 구현) ── */
+var perm=new Uint8Array(512);
+(function(){
+  var p2=new Uint8Array(256);
+  for(var i=0;i<256;i++)p2[i]=i;
+  for(var i=255;i>0;i--){
+    var j=Math.random()*(i+1)|0;
+    var tmp=p2[i];p2[i]=p2[j];p2[j]=tmp;
+  }
+  for(var i=0;i<512;i++)perm[i]=p2[i&255];
+})();
+function fade(t){return t*t*t*(t*(t*6-15)+10);}
+function lerpF(a,b,t){return a+(b-a)*t;}
+function grad(h,x,y){return((h&1)?x:-x)+((h&2)?y:-y);}
+function noise2(x,y){
+  var X=Math.floor(x)&255, Y=Math.floor(y)&255;
+  x-=Math.floor(x); y-=Math.floor(y);
+  var u=fade(x), v=fade(y);
+  var a=perm[X]+Y, b=perm[X+1]+Y;
+  return lerpF(lerpF(grad(perm[a],x,y),grad(perm[b],x-1,y),u),
+               lerpF(grad(perm[a+1],x,y-1),grad(perm[b+1],x-1,y-1),u),v);
+}
+
+/* ── 파티클 데이터 ── */
+var N=3000;
+var positions=new Float32Array(N*3);
+var colors=new Float32Array(N*3);
+var sizes=new Float32Array(N);
+
+/* 에이전트 상태 (CPU 사이드) */
+var ax=new Float32Array(N), ay=new Float32Array(N), az=new Float32Array(N);
+var avx=new Float32Array(N), avy=new Float32Array(N), avz=new Float32Array(N);
+var aPhase=new Float32Array(N), aDepth=new Float32Array(N);
+var aLife=new Float32Array(N), aMaxLife=new Float32Array(N);
+
+/* 색상 팔레트 */
+var PAL=[
+  [0.03,0.07,0.11],[0.05,0.11,0.17],
+  [0.07,0.33,0.38],[0.09,0.45,0.50],[0.12,0.57,0.61],
+  [0.24,0.55,0.47],[0.35,0.61,0.39],
+  [0.65,0.51,0.22],[0.76,0.62,0.27],[0.86,0.73,0.33],
+  [0.96,0.88,0.65],[1.00,0.96,0.82],
+];
+
+function initAgent(i){
+  var spread=500;
+  ax[i]=(Math.random()-.5)*spread*2.2;
+  ay[i]=(Math.random()-.5)*spread*1.2;
+  az[i]=(Math.random()-.5)*spread*1.8;
+  var a=Math.random()*Math.PI*2;
+  var spd=.4+Math.random()*1.2;
+  avx[i]=Math.cos(a)*spd;
+  avy[i]=Math.sin(a)*spd*.6;
+  avz[i]=(Math.random()-.5)*.5;
+  aPhase[i]=Math.random()*Math.PI*2;
+  aDepth[i]=Math.random();
+  aLife[i]=Math.random()*200;
+  aMaxLife[i]=100+Math.random()*350;
+}
+
+for(var i=0;i<N;i++) initAgent(i);
+
+/* Geometry */
+var geo=new THREE.BufferGeometry();
+var posAttr=new THREE.BufferAttribute(positions,3);
+var colAttr=new THREE.BufferAttribute(colors,3);
+var sizeAttr=new THREE.BufferAttribute(sizes,1);
+posAttr.setUsage(THREE.DynamicDrawUsage);
+colAttr.setUsage(THREE.DynamicDrawUsage);
+sizeAttr.setUsage(THREE.DynamicDrawUsage);
+geo.setAttribute('position',posAttr);
+geo.setAttribute('aColor',colAttr);
+geo.setAttribute('size',sizeAttr);
+
+/* 파티클 셰이더 — 원형, 깊이감, 빛 */
+var mat=new THREE.ShaderMaterial({
+  uniforms:{
+    uTime:{value:0},
+    uMouse:{value:new THREE.Vector2(.5,.5)},
+  },
+  vertexShader:`
+    attribute float size;
+    attribute vec3 aColor;
+    varying vec3 vColor;
+    varying float vAlpha;
+    void main(){
+      vColor=aColor;
+      vec4 mv=modelViewMatrix*vec4(position,1.0);
+      /* 원근 크기 */
+      float d=1.0/(length(mv.xyz)*0.0018+0.4);
+      gl_PointSize=size*d*clamp(400.0/-mv.z,0.3,3.0)*1.5;
+      vAlpha=clamp(d*0.9,0.05,1.0);
+      gl_Position=projectionMatrix*mv;
+    }
+  `,
+  fragmentShader:`
+    varying vec3 vColor;
+    varying float vAlpha;
+    void main(){
+      vec2 uv=gl_PointCoord-0.5;
+      float d=length(uv);
+      if(d>0.5) discard;
+
+      /* 코어 — 중앙 밝은 점 */
+      float core=smoothstep(0.18,0.0,d);
+
+      /* 수평·수직 광선 — 십자 플레어 */
+      float rayH=smoothstep(0.06,0.0,abs(uv.y))*(smoothstep(0.5,0.0,abs(uv.x)));
+      float rayV=smoothstep(0.06,0.0,abs(uv.x))*(smoothstep(0.5,0.0,abs(uv.y)));
+      float cross=(rayH+rayV)*0.75;
+
+      /* 대각선 광선 — 더 가늘고 희미하게 */
+      vec2 rot45=vec2(uv.x+uv.y, uv.x-uv.y)*0.707;
+      float diagA=smoothstep(0.035,0.0,abs(rot45.y))*smoothstep(0.5,0.0,abs(rot45.x));
+      float diagB=smoothstep(0.035,0.0,abs(rot45.x))*smoothstep(0.5,0.0,abs(rot45.y));
+      float diag=(diagA+diagB)*0.35;
+
+      /* 소프트 코어 글로우 */
+      float glow=smoothstep(0.5,0.0,d)*0.2;
+
+      vec3 col=vColor*(core+glow+cross*0.9+diag*0.5)
+               +vec3(1.0,0.97,0.85)*(core*0.8+cross*0.4);
+      float alpha=min((core+cross*0.7+diag*0.3+glow)*vAlpha, 0.95);
+      gl_FragColor=vec4(col,alpha);
+    }
+  `,
+  transparent:true,
+  depthWrite:false,
+  blending:THREE.AdditiveBlending,
+});
+
+var points=new THREE.Points(geo,mat);
+group.add(points);
+
+/* 후광 레이어 — 큰 소프트 파티클 */
+var N2=400;
+var pos2=new Float32Array(N2*3);
+var col2=new Float32Array(N2*3);
+var sz2=new Float32Array(N2);
+for(var i=0;i<N2;i++){
+  pos2[i*3]=(Math.random()-.5)*900;
+  pos2[i*3+1]=(Math.random()-.5)*500;
+  pos2[i*3+2]=(Math.random()-.5)*700;
+  var ci=Math.floor(Math.random()*PAL.length);
+  col2[i*3]=PAL[ci][0]*.6; col2[i*3+1]=PAL[ci][1]*.6; col2[i*3+2]=PAL[ci][2]*.6;
+  sz2[i]=8+Math.random()*22;
+}
+var geo2=new THREE.BufferGeometry();
+geo2.setAttribute('position',new THREE.BufferAttribute(pos2,3));
+geo2.setAttribute('aColor',new THREE.BufferAttribute(col2,3));
+geo2.setAttribute('size',new THREE.BufferAttribute(sz2,1));
+var mat2=new THREE.ShaderMaterial({
+  vertexShader:`
+    attribute float size;attribute vec3 aColor;
+    varying vec3 vColor;
+    void main(){
+      vColor=aColor;
+      vec4 mv=modelViewMatrix*vec4(position,1.0);
+      gl_PointSize=size*clamp(300.0/-mv.z,0.2,2.5);
+      gl_Position=projectionMatrix*mv;
+    }`,
+  fragmentShader:`
+    varying vec3 vColor;
+    void main(){
+      vec2 uv=gl_PointCoord-0.5;float d=length(uv);
+      if(d>0.5)discard;
+      float a=smoothstep(0.5,0.0,d)*0.18;
+      gl_FragColor=vec4(vColor,a);
+    }`,
+  transparent:true,depthWrite:false,
+  blending:THREE.AdditiveBlending,
+});
+group.add(new THREE.Points(geo2,mat2));
+
+/* ── 스크롤 상태 ── */
+var scrollP=0;
+/* Y축 회전: 최대 ±PI/6 (30도) 로 클램프 */
+var ROT_MAX=Math.PI/6;
+var rotYCur=0, rotYTarget=0;
+/* 카메라 Z: 초기 600 고정, 스크롤해도 크게 변하지 않음 */
+var CAM_Z_INIT=600;
+var camZCur=CAM_Z_INIT, camZTarget=CAM_Z_INIT;
+/* 회전 lerp 속도 — 스크롤 속도 무관하게 일정하고 부드럽게 */
+var LERP=0.022;
+
+var sw=document.getElementById('sw');
+var hint=document.getElementById('hint');
+var gc1=document.getElementById('gc1');
+var gc2=document.getElementById('gc2');
+var gc3=document.getElementById('gc3');
+
+function setCard(el,s){
+  el.classList.remove('enter','exit');
+  if(s) el.classList.add(s);
+  el.style.pointerEvents=s==='enter'?'auto':'none';
+}
+
+/* ── 클락 틱 ── */
+var ctEl=document.getElementById('ct');
+var cmsEl=document.getElementById('cms');
+(function clockTick(){
   var n=new Date();
-  document.getElementById('ct').childNodes[0].textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')+':'+String(n.getSeconds()).padStart(2,'0');
-  document.getElementById('cms').textContent='.'+String(n.getMilliseconds()).padStart(3,'0');
-},1);
+  ctEl.childNodes[0].nodeValue=
+    String(n.getHours()).padStart(2,'0')+':'+
+    String(n.getMinutes()).padStart(2,'0')+':'+
+    String(n.getSeconds()).padStart(2,'0');
+  cmsEl.textContent='.'+String(n.getMilliseconds()).padStart(3,'0');
+  setTimeout(clockTick,1);
+})();
 
-/* SOUND */
-var bgm=document.getElementById('bgm'),sndOn=false,firstClick=false;
-function setSound(on){
-  sndOn=on;
-  document.getElementById('sndLbl').textContent=on?'Sound On':'Sound Off';
-  document.getElementById('sw1').style.opacity=on?'1':'.2';
-  document.getElementById('sw2').style.opacity=on?'1':'.2';
-  if(on){
-    bgm.volume=0;bgm.play().catch(function(){});
-    var v=0,fi=setInterval(function(){v=Math.min(v+.025,.4);bgm.volume=v;if(v>=.4)clearInterval(fi);},80);
+/* ── 클락 위치·크기 애니메이션 ──
+   중앙(초기) → 우상단(스크롤 p=0.7에서 완료)
+   rAF 루프로 부드럽게 lerp */
+var clkWrap=document.getElementById('clock-wrap');
+var clkLbl=clkWrap.querySelector('.clock-lbl');
+var clkProg=0, clkTarget=0;
+
+(function clkLoop(){
+  requestAnimationFrame(clkLoop);
+  /* lerp */
+  clkProg+=(clkTarget-clkProg)*0.07;
+  /* ease-out cubic */
+  var e=1-Math.pow(1-Math.min(clkProg,1),3);
+
+  /* 현재 뷰포트 기준 목표 위치 계산
+     초기: 중앙 (transform translate -50%,-50%)
+     목표: 우상단 right:4rem, top:1.8rem
+     → 중앙 기준 오프셋으로 환산 */
+  var cw=clkWrap.offsetWidth||160;
+  var ch=clkWrap.offsetHeight||50;
+  var rem=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;
+  var destX=innerWidth/2 - 4*rem - cw/2;
+  var destY=-(innerHeight/2 - 7.5*rem - ch/2);
+
+  var ox=destX*e;
+  var oy=destY*e;
+  clkWrap.style.transform='translate(calc(-50% + '+ox.toFixed(1)+'px), calc(-50% + '+oy.toFixed(1)+'px))';
+
+  /* 폰트: 4.2rem → 2.0rem */
+  ctEl.style.fontSize=(4.2-(4.2-2.0)*e).toFixed(3)+'rem';
+
+  /* 색 투명도: 0.5 → 0.4 */
+  ctEl.style.color='rgba(200,169,110,'+(0.5-0.1*e).toFixed(3)+')';
+
+  /* 레이블: 이동 시작하면 빠르게 페이드아웃 */
+  clkLbl.style.opacity=Math.max(0,1-e*4).toFixed(3);
+})();
+
+sw.addEventListener('scroll',function(){
+  var p=sw.scrollTop/innerHeight;
+  scrollP=p;
+  /* 클락: p=0~0.7 구간에서 우상단 이동 완료 */
+  clkTarget=Math.min(p/1.5, 1);
+
+  hint.style.opacity=String(Math.max(0,1-p*2));
+
+  /* 카드 제어 — 각 카드가 충분히 머물다 퇴장
+     p 0~1:   아무 카드 없음 (초기 구도 감상)
+     p 1~3:   gc1 등장·정지
+     p 3~3.5: gc1 퇴장
+     p 3.5~5.5: gc2 등장·정지
+     p 5.5~6: gc2 퇴장
+     p 6~8:   gc3 등장·정지                    */
+  if(p<1.2){
+    setCard(gc1,'');setCard(gc2,'');setCard(gc3,'');
+  } else if(p<2.2){
+    setCard(gc1,'enter');setCard(gc2,'');setCard(gc3,'');
+  } else if(p<2.7){
+    setCard(gc1,'exit');setCard(gc2,'');setCard(gc3,'');
+  } else if(p<3.7){
+    setCard(gc1,'exit');setCard(gc2,'enter');setCard(gc3,'');
+  } else if(p<4.2){
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'');
+  } else if(p<5.2){
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'enter');
   } else {
-    var v2=bgm.volume,fi2=setInterval(function(){v2=Math.max(v2-.04,0);bgm.volume=v2;if(v2<=0){bgm.pause();clearInterval(fi2);}},60);
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');
   }
-}
-document.getElementById('sndBtn').addEventListener('click',function(){setSound(!sndOn);});
-document.addEventListener('click',function(){if(!firstClick){firstClick=true;setSound(true);}},{once:true});
 
-/* THREE.JS — GLSL NOISE MESH "ADD" CONCEPT */
-var renderer,scene,camera,mesh,ut=0,um=new THREE.Vector2();
-function initThree(){
-  var c=document.getElementById('three-canvas');
-  renderer=new THREE.WebGLRenderer({canvas:c,antialias:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-  renderer.setSize(innerWidth,innerHeight);
-  renderer.setClearColor(0x000000,1);
-  scene=new THREE.Scene();
-  camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);
-  camera.position.z=3;
-  var geo=new THREE.PlaneGeometry(8,8,160,160);
-  var mat=new THREE.ShaderMaterial({
-    uniforms:{uT:{value:0},uM:{value:um},uC:{value:new THREE.Color(0xc8a96e)}},
-    vertexShader:`
-uniform float uT;uniform vec2 uM;varying float vD;varying vec2 vUv;
-vec3 m3(vec3 x){return x-floor(x*(1./289.))*289.;}vec4 m4(vec4 x){return x-floor(x*(1./289.))*289.;}
-vec4 pe(vec4 x){return m4(((x*34.)+1.)*x);}
-float sn(vec3 v){
-  const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
-  vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
-  vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
-  vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;i=m3(i);
-  vec4 p=pe(pe(pe(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
-  vec3 ns=.142857142857*D.wyz-D.xzx;vec4 j=p-49.*floor(p*ns.z*ns.z);
-  vec4 xx=floor(j*ns.z);vec4 yy=floor(j-7.*xx);
-  vec4 xn=xx*ns.x+ns.yyyy;vec4 yn=yy*ns.x+ns.yyyy;vec4 h=1.-abs(xn)-abs(yn);
-  vec4 b0=vec4(xn.xy,yn.xy);vec4 b1=vec4(xn.zw,yn.zw);
-  vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));
-  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
-  vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
-  vec4 norm=1.79284291400159-.85373472095314*vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3));
-  p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
-  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
-  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
-}
-void main(){
-  vUv=uv;vec3 pos=position;
-  /* ADD concept: 3 noise layers combine → expanding energy */
-  float n1=sn(vec3(pos.xy*1.1,uT*.15));
-  float n2=sn(vec3(pos.xy*2.6+1.4,uT*.10));
-  float n3=sn(vec3(pos.xy*.55-.9,uT*.07));
-  float d=n1*.5+n2*.25+n3*.35;
-  vec2 md=pos.xy-uM*2.5;float mf=1.-smoothstep(0.,2.,length(md));
-  d+=mf*.3;pos.z=d*.52;vD=d;
-  gl_Position=projectionMatrix*modelViewMatrix*vec4(pos,1.);
-}`,
-    fragmentShader:`
-uniform vec3 uC;uniform float uT;varying float vD;varying vec2 vUv;
-void main(){
-  float b=smoothstep(-.4,.85,vD);
-  vec3 col=mix(vec3(.02,.015,.005),uC,b);col=mix(col,vec3(.9,.8,.5),b*b*.4);
-  vec2 c=vUv-.5;float edge=1.-smoothstep(.18,.5,length(c));
-  gl_FragColor=vec4(col,edge*(.6+b*.4));
-}`,
-    transparent:true,side:THREE.DoubleSide
-  });
-  mesh=new THREE.Mesh(geo,mat);mesh.rotation.x=-.28;scene.add(mesh);
-  document.addEventListener('mousemove',function(e){um.set((e.clientX/innerWidth)*2-1,-(e.clientY/innerHeight)*2+1);mat.uniforms.uM.value=um;});
-  window.addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
-}
-function animThree(){requestAnimationFrame(animThree);ut+=.01;if(mesh){mesh.material.uniforms.uT.value=ut;mesh.rotation.z=Math.sin(ut*.08)*.04;}renderer.render(scene,camera);}
-initThree();animThree();
+  /* ── 핵심: 스크롤 → 회전·카메라 매핑 ──
+     한 섹션(1 innerHeight) = PI/4 (45도) 회전
+     스크롤 올리면 정확히 역방향으로 복귀
+  */
+  rotYTarget=Math.min(p*(Math.PI/8), ROT_MAX);   /* 4섹션 = 90도, 클램프 30도 */
 
-/* GLITCH VIDEO CARDS */
-var vccs=document.querySelectorAll('.vcard-canvas'),vctx=[],vct=[];
-vccs.forEach(function(c,i){
-  c.width=c.parentElement.offsetWidth||480;c.height=Math.round(c.width*9/16);
-  vctx.push(c.getContext('2d'));vct.push(Math.random()*200);
+  /* Z축: 스크롤할수록 카메라가 씬 안으로 파고듦
+     600(초기) → 최대 -200 (파티클 군락 한가운데) */
+  camZTarget=600-p*80;
 });
-window.addEventListener('resize',function(){vccs.forEach(function(c){c.width=c.parentElement.offsetWidth||480;c.height=Math.round(c.width*9/16);});});
-function drawGlitch(ctx,W,H,seed,t){
-  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-  for(var y=0;y<H;y+=4){ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(0,y,W,2);}
-  for(var b=0;b<8+seed;b++){
-    var by=((b/(8+seed)+t*.003*(seed%2===0?1:-1))%1)*H;
-    var ba=.04+Math.abs(Math.sin(t*.04+b*1.8))*.09;
-    ctx.fillStyle='rgba(200,169,110,'+ba+')';ctx.fillRect(0,by,W,2+Math.abs(Math.sin(t*.03+b))*5);
-  }
-  for(var p=0;p<22+seed*4;p++){
-    var px=(Math.sin(t*.018+p*.85+seed)*.5+.5)*W;
-    var py=(Math.cos(t*.013+p*1.1+seed*.5)*.5+.5)*H;
-    var pa=.07+Math.abs(Math.sin(t*.022+p*.4))*.22;
-    ctx.beginPath();ctx.arc(px,py,.5+Math.abs(Math.sin(t*.05+p))*1.4,0,Math.PI*2);
-    ctx.fillStyle='rgba(200,169,110,'+pa+')';ctx.fill();
-  }
-  for(var l=0;l<4;l++){
-    var lx=(Math.sin(t*.007+l*2.2+seed)*.5+.5)*W;
-    var la=.02+Math.abs(Math.sin(t*.018+l))*.04;
-    ctx.strokeStyle='rgba(200,169,110,'+la+')';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(lx,0);ctx.lineTo(lx,H);ctx.stroke();
-  }
-  if(Math.sin(t*.07+seed)>.78){for(var s=0;s<3;s++){var sy=Math.random()*H,sw=1+Math.random()*3,sx=(Math.random()-.5)*10;try{var id=ctx.getImageData(0,sy,W,sw);ctx.putImageData(id,sx,sy);}catch(e){}}}
-}
-(function animVC(){requestAnimationFrame(animVC);vccs.forEach(function(c,i){vct[i]+=.5;drawGlitch(vctx[i],c.width,c.height,parseInt(c.dataset.seed)||1,vct[i]);});})();
 
-/* SCROLL REVEAL */
-var sc=document.getElementById('sc');
-var s2lbl=document.getElementById('s2lbl'),s2ttl=document.getElementById('s2ttl');
-var vcards=document.querySelectorAll('.vcard');
-var revEls=document.querySelectorAll('.reveal');
-sc.addEventListener('scroll',function(){
-  var sy=sc.scrollTop,wh=innerHeight;
-  var s2=document.getElementById('s2');
-  if(s2&&s2.offsetTop-sy<wh*.85){s2lbl.classList.add('in');s2ttl.classList.add('in');vcards.forEach(function(v){v.classList.add('in');});}
-  revEls.forEach(function(el,i){if(el.offsetTop-sy<wh*.85){setTimeout(function(){el.classList.add('visible');},i*80);}});
-});
+/* ── 플로우 필드 ── */
+var clock=new THREE.Clock();
+
+function getField(x,y,time){
+  var nx=x/800, ny=y/450;
+  var dist=Math.sqrt(x*x+y*y)+.001;
+  var ndist=dist/800;
+  /* 나선 */
+  var sa=Math.atan2(y,x)+Math.PI/2;
+  var ss=.55*(1-ndist*.7);
+  var fx=Math.cos(sa)*ss, fy=Math.sin(sa)*ss;
+  /* 노이즈 */
+  var n1=noise2(nx*1.8+time*.12,ny*1.8)*Math.PI*3;
+  var n2=noise2(nx*3.8+50+time*.07,ny*3.8+50)*Math.PI*2;
+  fx+=Math.cos(n1)*.55+Math.cos(n2)*.28;
+  fy+=Math.sin(n1)*.55+Math.sin(n2)*.28;
+  /* 중앙 인력 */
+  fx-=(x/dist)*Math.max(0,ndist-.3)*.4;
+  fy-=(y/dist)*Math.max(0,ndist-.3)*.4;
+  var len=Math.sqrt(fx*fx+fy*fy)+.001;
+  return{x:fx/len,y:fy/len};
+}
+
+/* ── 렌더 루프 ── */
+function animate(){
+  requestAnimationFrame(animate);
+  var t=clock.getElapsedTime();
+
+  /* ── Lerp: 스크롤 속도와 무관한 일정한 전환 ──
+     LERP=0.04 → 느리고 무게감 있게, 항상 같은 속도로 수렴 */
+  rotYCur+=(rotYTarget-rotYCur)*LERP;
+  camZCur+=(camZTarget-camZCur)*LERP;
+
+  /* group 회전 — Y축만, X는 고정된 미세 기울기 */
+  group.rotation.y=rotYCur;
+  group.rotation.x=0.04;  /* 고정 quarter-view 느낌, 스크롤과 무관 */
+
+  /* 카메라: 초기 정면 구도(0,0,600) 기준
+     마우스로 아주 미세한 시차만 허용 */
+  var nmx=(mx/W-.5)*2, nmy=-(my/H-.5)*2;
+  var tCamX=nmx*18;   /* 마우스 X 시차 ±18 */
+  var tCamY=nmy*10;   /* 마우스 Y 시차 ±10 */
+  camera.position.x+=(tCamX-camera.position.x)*0.025;
+  camera.position.y+=(tCamY-camera.position.y)*0.025;
+  camera.position.z=camZCur;
+  /* 시선은 항상 씬 중앙(0,0,0)으로 고정 */
+  camera.lookAt(0,0,0);
+
+  /* 파티클 업데이트 */
+  var mouseWorld=new THREE.Vector3(nmx*400,nmy*250,0);
+
+  for(var i=0;i<N;i++){
+    aLife[i]++;
+    var lr=aLife[i]/aMaxLife[i];
+    var fade=lr<.08?lr/.08:lr>.82?(1-lr)/.18:1;
+
+    /* 플로우 필드 */
+    var f=getField(ax[i],ay[i],t+aPhase[i]);
+    var spd=(.5+Math.random()*.1)*(0.8+.2/(aDepth[i]+.3));
+    avx[i]=avx[i]*.95+f.x*spd*.05;
+    avy[i]=avy[i]*.95+f.y*spd*.05;
+
+    /* z 진동 — 깊이감 */
+    avz[i]+=noise2(ax[i]*.002+t*.06,ay[i]*.002)*.8;
+    avz[i]*=.96;
+
+    ax[i]+=avx[i]; ay[i]+=avy[i]; az[i]+=avz[i];
+
+    /* 마우스 인력 — 3D 공간에서 */
+    var mdx=mouseWorld.x-ax[i], mdy=mouseWorld.y-ay[i];
+    var md=Math.sqrt(mdx*mdx+mdy*mdy)+.001;
+    if(md<200){
+      var mf=(1-md/200)*(1-md/200)*1.6;
+      var mt=Math.atan2(mdy,mdx)+Math.PI/2;
+      avx[i]+=Math.cos(mt)*mf*.5;
+      avy[i]+=Math.sin(mt)*mf*.5;
+    }
+
+    /* 재생성 */
+    if(aLife[i]>aMaxLife[i]||Math.abs(ax[i])>700||Math.abs(ay[i])>450){
+      initAgent(i);continue;
+    }
+
+    /* 위치 기록 */
+    positions[i*3]=ax[i];
+    positions[i*3+1]=ay[i];
+    positions[i*3+2]=az[i];
+
+    /* 색: 중앙 거리 + 깊이 기반 */
+    var dist2=Math.sqrt(ax[i]*ax[i]+ay[i]*ay[i])/600;
+    var cp=Math.max(0,Math.min(1,(1-dist2*1.6)*.8));
+    var ci=Math.round(cp*(PAL.length-1));
+    colors[i*3]=PAL[ci][0]*fade;
+    colors[i*3+1]=PAL[ci][1]*fade;
+    colors[i*3+2]=PAL[ci][2]*fade;
+
+    /* 크기: 앞쪽 크고 밝음 */
+    sizes[i]=(1.8+aDepth[i]*2.2)*(0.7+fade*.3)*3;
+  }
+
+  posAttr.needsUpdate=true;
+  colAttr.needsUpdate=true;
+  sizeAttr.needsUpdate=true;
+  mat.uniforms.uTime.value=t;
+
+  renderer.render(scene,camera);
+}
+
+animate();
+
 })();
 </script>
 </body>
