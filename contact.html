@@ -4,7 +4,39 @@
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ADDMENT — Contact</title>
 <link rel="stylesheet" href="style.css"/>
-
+<style>
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:start;margin-top:4rem}
+.contact-notice{background:rgba(200,169,110,.03);border:1px solid var(--border);border-left:3px solid var(--gold-d);padding:1.6rem 2rem;margin-bottom:3rem}
+.cn-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.2em;color:var(--gold);margin-bottom:.6rem;display:block}
+.cn-text{font-size:.85rem;line-height:1.85;color:rgba(238,234,226,.65)}
+.cn-text strong{color:var(--white);font-weight:500}
+.email-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.2em;color:var(--muted);margin-bottom:.5rem;display:block}
+.email-link{font-family:var(--fh);font-weight:600;font-size:1.15rem;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-d);padding-bottom:.2rem;display:inline-block;margin-bottom:2.5rem;transition:all .3s}
+.email-link:hover{color:var(--gold-l);border-color:var(--gold-l)}
+.contact-meta{font-family:var(--fm);font-size:.68rem;letter-spacing:.1em;color:var(--muted);line-height:2.5}
+.contact-meta span{color:var(--white)}
+.service-links{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:3rem}
+.sl-card{background:var(--surface);border:1px solid var(--border);padding:1.5rem;text-decoration:none;display:block;transition:background .3s;position:relative;overflow:hidden}
+.sl-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--gold-d);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.sl-card:hover{background:var(--surface2)}.sl-card:hover::after{transform:scaleX(1)}
+.sl-label{font-family:var(--fm);font-size:.56rem;letter-spacing:.15em;color:var(--gold-d);margin-bottom:.4rem;display:block}
+.sl-name{font-family:var(--fh);font-weight:700;font-size:.9rem;color:var(--white)}
+.steps-list{list-style:none}
+.c-step{display:flex;gap:1.4rem;align-items:flex-start;padding:1.8rem 0;border-bottom:1px solid var(--border)}
+.c-step:first-child{padding-top:0}
+.c-num{font-family:var(--fm);font-size:.6rem;color:var(--gold-d);min-width:2rem;padding-top:.1rem;flex-shrink:0}
+.c-title{font-family:var(--fh);font-weight:700;font-size:.95rem;margin-bottom:.35rem}
+.c-desc{font-size:.82rem;line-height:1.75;color:var(--muted)}
+.c-desc strong{color:var(--white);font-weight:500}
+#cta{background:var(--black);border-top:1px solid var(--border);text-align:center;padding:6rem 0}
+.cta-title{font-family:var(--fh);font-weight:700;font-size:clamp(2rem,5vw,4rem);line-height:1.1;margin-bottom:1rem}
+.cta-title .ko{font-family:var(--fb);font-weight:700}
+.cta-title em{font-style:normal;color:var(--gold)}
+.cta-sub{font-size:.92rem;color:rgba(238,234,226,.5);margin-bottom:3rem;line-height:1.9}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+@media(max-width:1024px){.contact-grid{grid-template-columns:1fr;gap:4rem}}
+@media(max-width:600px){.service-links{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div class="cursor" id="cursor"></div>
@@ -48,7 +80,7 @@
         </div>
         <div class="reveal">
           <span class="email-label">// E-MAIL</span>
-          <a href="/cdn-cgi/l/email-protection#6c05020a03420d0808010902182c0b010d0500420f0301" class="email-link"><span class="__cf_email__" data-cfemail="2b42454d44054a4f4f464e455f6b4c464a424705484446">[email&#160;protected]</span></a>
+          <a href="/cdn-cgi/l/email-protection#254c4b434a0b44414148404b51654248444c490b464a48" class="email-link"><span class="__cf_email__" data-cfemail="fd94939b92d39c999990989389bd9a909c9491d39e9290">[email&#160;protected]</span></a>
         </div>
         <div class="contact-meta reveal">
           LOCATION &nbsp;·&nbsp; <span>서울 · 전국 출장 가능</span><br/>
