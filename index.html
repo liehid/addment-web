@@ -140,11 +140,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 @media(max-width:768px){
   /* 카드 */
   .gcard{width:min(90vw,460px)}
-  /* NAV — 로고 좌측 고정, 햄버거 크기 키움 */
+  /* NAV */
   nav{padding:0 1.5rem}
-  .hbg{display:flex}
-  .nav-links{display:none}
-  .nav-tag{font-size:.62rem}
+  .nav-links{display:none !important}
+  .nav-tag{display:none}
+  .hbg{display:flex !important;z-index:60;pointer-events:auto}
   .hbg span{width:26px;height:1.5px}
   /* 클락 — 모바일 초기 폰트 축소 */
   #ct{font-size:2.8rem}
