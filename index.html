@@ -143,7 +143,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
   /* NAV — 로고 + 햄버거만, Module Team 텍스트 숨김 */
   nav{padding:0 1.5rem}
   .nav-links{display:none !important}
-  .nav-tag{display:none !important}
+  .nav-tag{font-size:.46rem;white-space:nowrap}
   .hbg{display:flex !important;z-index:60;pointer-events:auto}
   .hbg span{width:26px;height:1.5px}
   /* 클락 — 모바일 초기 폰트 축소 */
@@ -592,7 +592,7 @@ mobileClose.addEventListener('click',function(){mobileMenu.classList.remove('ope
 /* 모바일에서 nav-tag 강제 숨김 */
 if(innerWidth<=768){
   var navTag=document.getElementById('nav-tag');
-  if(navTag) navTag.style.display='none';
+  if(navTag) navTag.style.display='';
 }
 
 function setCard(el,s){
