@@ -140,10 +140,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 @media(max-width:768px){
   /* 카드 */
   .gcard{width:min(90vw,460px)}
-  /* NAV */
+  /* NAV — 다른 페이지와 동일한 구조로 통일 */
   nav{padding:0 1.5rem}
   .nav-links{display:none !important}
-  .nav-tag{display:none}
+  .nav-tag{display:inline;font-size:.48rem}
   .hbg{display:flex !important;z-index:60;pointer-events:auto}
   .hbg span{width:26px;height:1.5px}
   /* 클락 — 모바일 초기 폰트 축소 */
@@ -189,7 +189,7 @@ nav{
 .nav-links a:hover{color:rgba(200,169,110,.9);}
 .nav-links a:hover::after{transform:scaleX(1);}
 .hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem;}
-.hbg span{width:22px;height:1px;background:rgba(200,169,110,.5);display:block;}
+.hbg span{width:22px;height:1px;background:rgba(255,255,255,.85);display:block;}
 
 /* ── 모바일 전체화면 메뉴 ── */
 #mobile-menu{
