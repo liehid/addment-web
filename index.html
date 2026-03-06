@@ -146,7 +146,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
   .nav-links{display:none}
   .nav-tag{font-size:.62rem}
   .hbg span{width:26px;height:1.5px}
-  /* 클락 — 우측 여백 줄이고 max-width 제한 */
+  /* 클락 — 모바일 초기 폰트 축소 */
+  #ct{font-size:2.8rem}
   #clock-wrap{max-width:calc(100vw - 3rem)}
   /* CTA — 시계와 겹침 방지용 상단 여백 */
   #cta-wrap{
@@ -189,6 +190,29 @@ nav{
 .nav-links a:hover::after{transform:scaleX(1);}
 .hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem;}
 .hbg span{width:22px;height:1px;background:rgba(200,169,110,.5);display:block;}
+
+/* ── 모바일 전체화면 메뉴 ── */
+#mobile-menu{
+  display:none;
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.97);
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:2.5rem;
+}
+#mobile-menu.open{display:flex}
+#mobile-menu a{
+  font-family:'Syne',sans-serif;font-weight:700;font-size:2.2rem;
+  color:rgba(255,255,255,.85);text-decoration:none;
+  letter-spacing:.04em;transition:color .3s;
+}
+#mobile-menu a:hover,#mobile-menu a.active{color:rgba(200,169,110,.9);}
+#mobile-menu-close{
+  position:absolute;top:1.5rem;right:1.5rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.2em;color:rgba(200,169,110,.4);
+  cursor:pointer;padding:.5rem;background:none;border:none;
+  text-transform:uppercase;
+}
 
 /* ── CLOCK ── */
 #clock-wrap{
@@ -248,6 +272,17 @@ nav{
   </ul>
   <div class="hbg" id="hbg"><span></span><span></span><span></span></div>
 </nav>
+
+<!-- 모바일 전체화면 메뉴 -->
+<div id="mobile-menu">
+  <button id="mobile-menu-close">✕ close</button>
+  <a href="index.html" class="active">Home</a>
+  <a href="live.html">Live</a>
+  <a href="youtube.html">YouTube</a>
+  <a href="wedding.html">Wedding</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+</div>
 
 <!-- DIGITAL CLOCK — 중앙 시작, 스크롤 시 우상단으로 이동 -->
 <div id="clock-wrap">
@@ -547,6 +582,13 @@ var gc1=document.getElementById('gc1');
 var gc2=document.getElementById('gc2');
 var gc3=document.getElementById('gc3');
 
+/* ── 모바일 햄버거 메뉴 ── */
+var hbg=document.getElementById('hbg');
+var mobileMenu=document.getElementById('mobile-menu');
+var mobileClose=document.getElementById('mobile-menu-close');
+hbg.addEventListener('click',function(){mobileMenu.classList.add('open');});
+mobileClose.addEventListener('click',function(){mobileMenu.classList.remove('open');});
+
 function setCard(el,s){
   el.classList.remove('enter','exit');
   if(s) el.classList.add(s);
@@ -588,16 +630,26 @@ var clkProg=0, clkTarget=0;
   var ch=clkWrap.offsetHeight||50;
   var rem=parseFloat(getComputedStyle(document.documentElement).fontSize)||16;
   var isMobile=innerWidth<=768;
-  var rightRem=isMobile?1.5:4;
-  var destX=innerWidth/2 - rightRem*rem - cw/2;
-  var destY=-(innerHeight/2 - 7.5*rem - ch/2);
+
+  var destX, destY;
+  if(isMobile){
+    /* 모바일: 상단 중앙으로 이동 (x오프셋 없음, y만 위로) */
+    destX=0;
+    destY=-(innerHeight/2 - 5.5*rem - ch/2);
+  } else {
+    /* 데스크탑: 우상단으로 이동 */
+    destX=innerWidth/2 - 4*rem - cw/2;
+    destY=-(innerHeight/2 - 7.5*rem - ch/2);
+  }
 
   var ox=destX*e;
   var oy=destY*e;
   clkWrap.style.transform='translate(calc(-50% + '+ox.toFixed(1)+'px), calc(-50% + '+oy.toFixed(1)+'px))';
 
-  /* 폰트: 4.2rem → 2.0rem */
-  ctEl.style.fontSize=(4.2-(4.2-2.0)*e).toFixed(3)+'rem';
+  /* 폰트: 데스크탑 4.2→2.0rem / 모바일 2.8→1.4rem */
+  var fsStart=isMobile?2.8:4.2;
+  var fsEnd=isMobile?1.4:2.0;
+  ctEl.style.fontSize=(fsStart-(fsStart-fsEnd)*e).toFixed(3)+'rem';
 
   /* 색 투명도: 0.5 → 0.4 */
   ctEl.style.color='rgba(200,169,110,'+(0.5-0.1*e).toFixed(3)+')';
