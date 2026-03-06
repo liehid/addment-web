@@ -140,12 +140,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 @media(max-width:768px){
   /* 카드 */
   .gcard{width:min(90vw,460px)}
-  /* NAV — 로고 + 햄버거만, Module Team 텍스트 숨김 */
-  nav{padding:0 1.5rem}
+  /* NAV — padding 강제 적용 */
+  nav{padding:0 1.5rem !important}
   .nav-links{display:none !important}
   .nav-tag{font-size:.46rem;white-space:nowrap}
   .hbg{display:flex !important;z-index:60;pointer-events:auto}
   .hbg span{width:26px;height:1.5px}
+  /* 커서링 숨김 */
+  #cur,#cur-ring{display:none !important}
   /* 클락 — 모바일 초기 폰트 축소 */
   #ct{font-size:2.8rem}
   #clock-wrap{max-width:calc(100vw - 3rem)}
@@ -357,12 +359,14 @@ var curDot=document.getElementById('cur');
 var curRing=document.getElementById('cur-ring');
 var mx=innerWidth/2, my=innerHeight/2, rx=mx, ry=my;
 document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-(function cl(){
-  curDot.style.left=mx+'px';curDot.style.top=my+'px';
-  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
-  curRing.style.left=rx+'px';curRing.style.top=ry+'px';
-  requestAnimationFrame(cl);
-})();
+if(innerWidth>768){
+  (function cl(){
+    curDot.style.left=mx+'px';curDot.style.top=my+'px';
+    rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+    curRing.style.left=rx+'px';curRing.style.top=ry+'px';
+    requestAnimationFrame(cl);
+  })();
+}
 
 /* ── THREE 기본 설정 ── */
 var W=innerWidth, H=innerHeight;
