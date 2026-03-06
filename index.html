@@ -216,27 +216,43 @@ nav{
   text-transform:uppercase;
 }
 
-/* ── 카드 하단 안내 ── */
+/* ── 스크롤 안내 (시계 아래) ── */
 #card-hint{
-  position:fixed;left:50%;bottom:2.5rem;
-  transform:translateX(-50%);
+  position:fixed;left:50%;top:50%;
+  /* 시계 아래 — 클락wrap 바로 밑에 붙도록 offset */
+  transform:translate(-50%, calc(-50% + 80px));
   z-index:25;pointer-events:none;
   text-align:center;
-  opacity:0;transition:opacity .6s;
+  opacity:0;transition:opacity .6s, transform 1.0s cubic-bezier(.16,1,.3,1);
+  will-change:transform,opacity;
 }
 #card-hint.show{opacity:1}
+#card-hint.scrolled{
+  /* 스크롤 후 시계가 이동하면 힌트도 따라 올라감 */
+  transform:translate(-50%, calc(-50% + 80px));
+}
+.hint-up{
+  display:block;width:1px;height:22px;
+  background:linear-gradient(to top,rgba(200,169,110,.5),transparent);
+  margin:0 auto 6px;
+  animation:arrowUp 1.6s ease-in-out infinite;
+  opacity:0;transition:opacity .4s;
+}
+.hint-up.show{opacity:1}
 .card-hint-text{
   font-family:'IBM Plex Mono',monospace;font-weight:300;
-  font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;
-  color:rgba(200,169,110,.45);display:block;margin-bottom:.5rem;
+  font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(200,169,110,.7);display:block;
+  margin:6px 0;
 }
-.card-hint-arrow{
-  display:block;width:1px;height:28px;
-  background:linear-gradient(to bottom,rgba(200,169,110,.4),transparent);
-  margin:0 auto;
-  animation:arrowPulse 1.6s ease-in-out infinite;
+.hint-down{
+  display:block;width:1px;height:22px;
+  background:linear-gradient(to bottom,rgba(200,169,110,.5),transparent);
+  margin:6px auto 0;
+  animation:arrowDown 1.6s ease-in-out infinite;
 }
-@keyframes arrowPulse{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.8;transform:translateY(5px)}}
+@keyframes arrowUp{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(-5px)}}
+@keyframes arrowDown{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(5px)}}
 #clock-wrap{
   position:fixed;
   /* 초기: 화면 중앙 하단 1/3 지점 */
@@ -362,10 +378,11 @@ nav{
   <a href="contact.html" class="cta-btn-email">이메일 문의 →</a>
 </div>
 
-<!-- 카드 하단 안내 -->
+<!-- 스크롤 안내 (시계 아래) -->
 <div id="card-hint">
-  <span class="card-hint-text" id="card-hint-text">Scroll to next</span>
-  <span class="card-hint-arrow"></span>
+  <span class="hint-up" id="hint-up"></span>
+  <span class="card-hint-text" id="card-hint-text">Scroll</span>
+  <span class="hint-down" id="hint-down"></span>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -628,6 +645,8 @@ if(innerWidth<=768){
 
 var cardHint=document.getElementById('card-hint');
 var cardHintText=document.getElementById('card-hint-text');
+var hintUp=document.getElementById('hint-up');
+var hintDown=document.getElementById('hint-down');
 
 function setCard(el,s){
   el.classList.remove('enter','exit');
@@ -640,12 +659,21 @@ function setCta(s){
   if(s) ctaEl.classList.add(s);
   ctaEl.style.pointerEvents=s==='enter'?'auto':'none';
 }
-function updateHint(show){
-  if(show){
-    cardHintText.textContent=innerWidth<=768?'Swipe up':'Scroll';
-    cardHint.classList.add('show');
-  } else {
+
+/* mode: 'down'=아래만 / 'both'=위아래 / 'hide'=숨김 */
+function updateHint(mode){
+  var isMob=innerWidth<=768;
+  if(mode==='hide'){
     cardHint.classList.remove('show');
+    return;
+  }
+  cardHint.classList.add('show');
+  if(mode==='down'){
+    cardHintText.textContent=isMob?'Swipe up':'Scroll';
+    hintUp.classList.remove('show'); /* 위 화살표 숨김 */
+  } else if(mode==='both'){
+    cardHintText.textContent=isMob?'Swipe':'Scroll';
+    hintUp.classList.add('show'); /* 위 화살표 보임 */
   }
 }
 
@@ -700,6 +728,11 @@ var clkProg=0, clkTarget=0;
   var oy=destY*e;
   clkWrap.style.transform='translate(calc(-50% + '+ox.toFixed(1)+'px), calc(-50% + '+oy.toFixed(1)+'px))';
 
+  /* 힌트도 시계와 함께 이동 — 시계 높이만큼 아래 오프셋 유지 */
+  var clkH=clkWrap.offsetHeight||50;
+  var hintOY=oy+(clkH+18);
+  cardHint.style.transform='translate(calc(-50% + '+ox.toFixed(1)+'px), calc(-50% + '+hintOY.toFixed(1)+'px))';
+
   /* 폰트: 데스크탑 4.2→2.0rem / 모바일 2.8→1.4rem */
   var fsStart=isMobile?2.8:4.2;
   var fsEnd=isMobile?1.4:2.0;
@@ -731,21 +764,21 @@ sw.addEventListener('scroll',function(){
      p 5.2~5.7: gc3 exit
      p 5.7~:   CTA          */
   if(p<1.2){
-    setCard(gc1,'');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint(false);
+    setCard(gc1,'');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint('down');
   } else if(p<2.2){
-    setCard(gc1,'enter');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint(true);
+    setCard(gc1,'enter');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint('both');
   } else if(p<2.7){
-    setCard(gc1,'exit');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint(false);
+    setCard(gc1,'exit');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint('hide');
   } else if(p<3.7){
-    setCard(gc1,'exit');setCard(gc2,'enter');setCard(gc3,'');setCta('');updateHint(true);
+    setCard(gc1,'exit');setCard(gc2,'enter');setCard(gc3,'');setCta('');updateHint('both');
   } else if(p<4.2){
-    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'');setCta('');updateHint(false);
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'');setCta('');updateHint('hide');
   } else if(p<5.2){
-    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'enter');setCta('');updateHint(true);
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'enter');setCta('');updateHint('both');
   } else if(p<5.7){
-    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');setCta('');updateHint(false);
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');setCta('');updateHint('hide');
   } else {
-    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');setCta('enter');updateHint(false);
+    setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');setCta('enter');updateHint('hide');
   }
   rotYTarget=Math.min(p*(Math.PI/8),ROT_MAX);
   camZTarget=600-p*80;
@@ -768,11 +801,11 @@ if(innerWidth<=768){
     rotYTarget=Math.min(p*(Math.PI/8),ROT_MAX);
     camZTarget=600-p*80;
     hint.style.opacity='0';
-    if(step===0){setCard(gc1,'');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint(false);}
-    else if(step===1){setCard(gc1,'enter');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint(true);}
-    else if(step===2){setCard(gc1,'exit');setCard(gc2,'enter');setCard(gc3,'');setCta('');updateHint(true);}
-    else if(step===3){setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'enter');setCta('');updateHint(true);}
-    else{setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');setCta('enter');updateHint(false);}
+    if(step===0){setCard(gc1,'');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint('down');}
+    else if(step===1){setCard(gc1,'enter');setCard(gc2,'');setCard(gc3,'');setCta('');updateHint('both');}
+    else if(step===2){setCard(gc1,'exit');setCard(gc2,'enter');setCard(gc3,'');setCta('');updateHint('both');}
+    else if(step===3){setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'enter');setCta('');updateHint('both');}
+    else{setCard(gc1,'exit');setCard(gc2,'exit');setCard(gc3,'exit');setCta('enter');updateHint('hide');}
   }
 
   function goSnap(dir){
@@ -796,9 +829,14 @@ if(innerWidth<=768){
   },{passive:true});
 
   applySnap(0);
+  /* 초기 힌트 표시 — 약간 딜레이 후 */
+  setTimeout(function(){updateHint('down');},1800);
 }
 
-/* ── 플로우 필드 ── */
+/* 웹 초기 힌트 */
+if(innerWidth>768){
+  setTimeout(function(){updateHint('down');},1800);
+}
 var clock=new THREE.Clock();
 
 function getField(x,y,time){
