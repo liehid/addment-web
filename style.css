@@ -9,8 +9,8 @@
   --fb:'Noto Sans KR',sans-serif;--fc:'Cormorant Garamond',Georgia,serif;
   --nav-h:70px;
 }
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:none}
+html{scroll-behavior:smooth;scrollbar-gutter:stable}
+body{background:var(--black);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:none;scrollbar-width:thin;scrollbar-color:rgba(200,169,110,.15) transparent}
 
 /* CURSOR */
 .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference}
