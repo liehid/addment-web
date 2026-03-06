@@ -240,7 +240,7 @@ nav{
 
 .hint-label{
   font-family:'IBM Plex Mono',monospace;font-weight:300;
-  font-size:.95rem;letter-spacing:.3em;text-transform:uppercase;
+  font-size:.82rem;letter-spacing:.3em;text-transform:uppercase;
   color:rgba(200,169,110,.85);display:block;margin:7px 0;
 }
 .hint-line-up{
@@ -384,7 +384,7 @@ nav{
 
 <!-- 스크롤 안내 A: 시계 아래 (초기) -->
 <div id="hint-clock">
-  <span class="hint-label">Scroll</span>
+  <span class="hint-label" id="hint-clock-text">Scroll</span>
   <span class="hint-line-down"></span>
 </div>
 
@@ -654,6 +654,7 @@ if(innerWidth<=768){
 }
 
 var hintClock=document.getElementById('hint-clock');
+var hintClockText=document.getElementById('hint-clock-text');
 var hintCard=document.getElementById('hint-card');
 var hintCardText=document.getElementById('hint-card-text');
 
@@ -676,6 +677,7 @@ function setCta(s){
 function updateHint(mode){
   var isMob=innerWidth<=768;
   if(mode==='initial'){
+    hintClockText.textContent=isMob?'Swipe':'Scroll';
     hintClock.classList.add('show');
     hintCard.classList.remove('show');
   } else if(mode==='card'){
