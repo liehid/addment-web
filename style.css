@@ -22,9 +22,9 @@ nav.scrolled{background:rgba(0,0,0,.95);backdrop-filter:blur(20px);border-bottom
 .nav-logo{display:flex;align-items:center;gap:.7rem;text-decoration:none}
 .nav-tag{font-family:var(--fm);font-size:.52rem;color:var(--gold-d);letter-spacing:.12em}
 .nav-links{display:flex;list-style:none}
-.nav-links a{color:var(--muted);text-decoration:none;font-family:var(--fm);font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;padding:.5rem 1.2rem;transition:color .3s;position:relative}
-.nav-links a::after{content:'';position:absolute;bottom:0;left:1.2rem;right:1.2rem;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s}
-.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+.nav-links a{color:rgba(200,169,110,.7);text-decoration:none;font-family:var(--fm);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;padding:.5rem 1.2rem;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:1.2rem;right:1.2rem;height:1px;background:rgba(200,169,110,.8);transform:scaleX(0);transition:transform .3s}
+.nav-links a:hover,.nav-links a.active{color:rgba(200,169,110,1)}
 .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:.5rem}
 .nav-hamburger span{display:block;width:22px;height:1px;background:var(--white)}
