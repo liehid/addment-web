@@ -140,10 +140,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 @media(max-width:768px){
   /* 카드 */
   .gcard{width:min(90vw,460px)}
-  /* NAV — 다른 페이지와 동일한 구조로 통일 */
+  /* NAV — 로고 + 햄버거만, Module Team 텍스트 숨김 */
   nav{padding:0 1.5rem}
   .nav-links{display:none !important}
-  .nav-tag{display:inline;font-size:.48rem}
+  .nav-tag{display:none !important}
   .hbg{display:flex !important;z-index:60;pointer-events:auto}
   .hbg span{width:26px;height:1.5px}
   /* 클락 — 모바일 초기 폰트 축소 */
@@ -260,7 +260,7 @@ nav{
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none" height="28" width="auto">
       <text x="0" y="38" font-family="Syne,sans-serif" font-weight="800" font-size="32" fill="rgba(255,255,255,0.85)" letter-spacing="2">ADDMENT</text>
     </svg>
-    <span class="nav-tag">// Module Team</span>
+    <span class="nav-tag" id="nav-tag">// Module Team</span>
   </a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
@@ -588,6 +588,12 @@ var mobileMenu=document.getElementById('mobile-menu');
 var mobileClose=document.getElementById('mobile-menu-close');
 hbg.addEventListener('click',function(){mobileMenu.classList.add('open');});
 mobileClose.addEventListener('click',function(){mobileMenu.classList.remove('open');});
+
+/* 모바일에서 nav-tag 강제 숨김 */
+if(innerWidth<=768){
+  var navTag=document.getElementById('nav-tag');
+  if(navTag) navTag.style.display='none';
+}
 
 function setCard(el,s){
   el.classList.remove('enter','exit');
