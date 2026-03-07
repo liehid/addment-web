@@ -105,6 +105,7 @@ footer{background:var(--deep);border-top:1px solid var(--border);padding:2rem 4r
 /* MOBILE */
 @media(max-width:768px){
   nav{padding:0 1.5rem}.nav-links{display:none}.nav-hamburger{display:flex}
+  .nav-logo img{height:22px !important}
   .container{padding:0 1.5rem}section{padding:4rem 0}
   .page-hero-inner{padding:3rem 1.5rem 4rem}
   footer{flex-direction:column;gap:.8rem;padding:2rem 1.5rem}
