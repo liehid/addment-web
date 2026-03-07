@@ -79,7 +79,9 @@
         </div>
         <div class="reveal">
           <span class="email-label">// E-MAIL</span>
-          <a id="email-link" href="#" class="email-link"></a>
+          <a id="email-link" href="#" class="email-link" target="_blank" rel="noopener"></a>
+          <button id="copy-btn" onclick="copyEmail()" style="display:block;margin-top:.6rem;background:none;border:none;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:rgba(200,169,110,.45);text-transform:uppercase;padding:0;transition:color .3s;">// 이메일 주소 복사</button>
+          <span id="copy-toast" style="display:none;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.15em;color:rgba(200,169,110,.8);margin-top:.3rem;">✓ 복사됨</span>
         </div>
         <div class="contact-meta reveal">
           LOCATION &nbsp;·&nbsp; <span>서울 · 전국 출장 가능</span><br/>
@@ -112,7 +114,8 @@
     <h2 class="cta-title reveal"><span class="ko">지금 바로</span><br/><em>시작하세요</em></h2>
     <p class="cta-sub reveal">기획안 없이도 괜찮습니다. 먼저 어떤 모듈이 필요한지 이야기해 주세요.</p>
     <div class="cta-actions reveal">
-      <a id="email-cta" href="#" class="btn-primary">이메일 문의 →</a>
+      <a id="email-cta" href="#" class="btn-primary" target="_blank" rel="noopener">Gmail로 문의 →</a>
+      <button id="copy-btn2" onclick="copyEmail()" class="btn-outline">이메일 주소 복사</button>
     </div>
   </div>
 </section>
@@ -129,6 +132,12 @@ var el=document.getElementById('email-link');
 var cta=document.getElementById('email-cta');
 if(el){el.href=gmail;el.textContent=e;el.target='_blank';el.rel='noopener';}
 if(cta){cta.href=gmail;cta.target='_blank';cta.rel='noopener';}
+window.copyEmail=function(){
+  navigator.clipboard.writeText(e).then(function(){
+    var t1=document.getElementById('copy-toast');
+    if(t1){t1.style.display='block';setTimeout(function(){t1.style.display='none';},2000);}
+  });
+};
 var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 var mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
