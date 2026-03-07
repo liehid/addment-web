@@ -124,10 +124,11 @@
 <script>
 (function(){
 var u='info',d='addment',t='gmail',e=u+'.'+d+'@'+t+'.com';
+var gmail='https://mail.google.com/mail/?view=cm&to='+e;
 var el=document.getElementById('email-link');
 var cta=document.getElementById('email-cta');
-if(el){el.href='mail'+'to:'+e;el.textContent=e;}
-if(cta){cta.href='mail'+'to:'+e;}
+if(el){el.href=gmail;el.textContent=e;el.target='_blank';el.rel='noopener';}
+if(cta){cta.href=gmail;cta.target='_blank';cta.rel='noopener';}
 var cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 var mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
