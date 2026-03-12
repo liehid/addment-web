@@ -22,6 +22,8 @@
 @media(max-width:768px){.cursor,.cursor-ring{display:none !important}}
 @media(max-width:768px){.pricing-spec-bar{flex-direction:column}.spec-item{border-right:none;border-bottom:1px solid var(--border)}.steps-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.steps-grid{grid-template-columns:1fr}}
+.mob-br{display:none}
+@media(max-width:768px){.mob-br{display:block}}
 </style>
 </head>
 <body>
@@ -51,7 +53,7 @@
   <div class="page-hero-inner">
     <div class="live-badge-hero reveal"><div class="live-dot-red"></div>MAIN MODULE</div>
     <span class="page-hero-label reveal">// Live Streaming Service</span>
-    <h1 class="page-hero-title reveal"><span class="ko">출장 라이브</span> <em>스트리밍</em></h1>
+    <h1 class="page-hero-title reveal"><span class="ko">출장 라이브</span><br class="mob-br"> <em>스트리밍</em></h1>
     <p class="page-hero-sub reveal">라이브 송출이 필요한 순간,<br>전문 장비와 인력을 필요한 시간 동안만<br>합리적인 비용으로 활용하세요.</p>
     <div class="page-hero-line"></div>
   </div>
@@ -75,7 +77,7 @@
 <section style="background:var(--deep)">
   <div class="container">
     <span class="sec-label reveal">// Pricing</span>
-    <h2 class="sec-title reveal">출장 라이브 스트리밍 <em>가격표</em> <span style="font-size:clamp(.75rem,1.5vw,1rem);font-weight:400;color:var(--muted);font-family:var(--fb)">(수도권 기준, 기타 지역 상담 필요)</span></h2>
+    <h2 class="sec-title reveal">출장 라이브 스트리밍<br class="mob-br"> <em>가격표</em> <span style="font-size:clamp(.75rem,1.5vw,1rem);font-weight:400;color:var(--muted);font-family:var(--fb)">(수도권 기준, 기타 지역 상담 필요)</span></h2>
     <div class="pricing-spec-bar reveal" style="margin-top:2.5rem">
       <div class="spec-item"><span class="spec-label">방송 시간 기준</span><span class="spec-val">60분</span></div>
       <div class="spec-item"><span class="spec-label">작업일</span><span class="spec-val">1일</span></div>
